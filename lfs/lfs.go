@@ -1,6 +1,6 @@
 package lfs
 
-// xlattice_go/util/fs/lfs.go
+// xlUtil_go/fs/lfs.go
 
 import (
 	"os"

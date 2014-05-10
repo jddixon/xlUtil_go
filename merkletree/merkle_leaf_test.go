@@ -5,9 +5,9 @@ import (
 	"code.google.com/p/go.crypto/sha3"
 	"crypto/sha1"
 	"fmt"
-	xr "github.com/jddixon/xlattice_go/rnglib"
-	"io/ioutil"
+	xr "github.com/jddixon/rnglib_go"
 	. "gopkg.in/check.v1"
+	"io/ioutil"
 	"strings"
 )
 

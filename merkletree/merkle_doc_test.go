@@ -8,9 +8,9 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"fmt"
-	xr "github.com/jddixon/xlattice_go/rnglib"
-	"hash"
+	xr "github.com/jddixon/rnglib_go"
 	. "gopkg.in/check.v1"
+	"hash"
 	re "regexp"
 )
 

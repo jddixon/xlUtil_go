@@ -1,6 +1,6 @@
-package util
+package xlUtil_go
 
-// xlattice_go/util/entityName.go
+// xlUtil_go/entityName.go
 
 import (
 	"regexp"

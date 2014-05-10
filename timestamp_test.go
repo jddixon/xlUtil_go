@@ -1,6 +1,6 @@
-package util
+package xlUtil_go
 
-// xlattice_go/util/timestamp_test.go
+// xlUtil_go/timestamp_test.go
 
 import (
 	"github.com/jddixon/xlattice_go/rnglib"

@@ -1,13 +1,13 @@
-package util
+package xlUtil_go
 
 import (
-	"github.com/jddixon/xlattice_go/rnglib"
+	xr "github.com/jddixon/rnglib_go"
 	. "gopkg.in/check.v1"
 	"strconv"
 	"strings"
 )
 
-func (s *XLSuite) noDotsOrDashes(rng *rnglib.PRNG) string {
+func (s *XLSuite) noDotsOrDashes(rng *xr.PRNG) string {
 	var length int = 3 + rng.Intn(16)
 	var name = rng.NextFileName(length)
 	for len(name) < 3 || strings.ContainsAny(name, ".-") ||
@@ -18,7 +18,7 @@ func (s *XLSuite) noDotsOrDashes(rng *rnglib.PRNG) string {
 }
 
 func (s *XLSuite) TestGoodNames(c *C) {
-	rng := rnglib.MakeSimpleRNG()
+	rng := xr.MakeSimpleRNG()
 	var count int = 3 + rng.Intn(16)
 	for i := 0; i < count; i++ {
 		s := s.noDotsOrDashes(rng)
@@ -26,7 +26,7 @@ func (s *XLSuite) TestGoodNames(c *C) {
 	}
 }
 func (s *XLSuite) TestBadNames(c *C) {
-	rng := rnglib.MakeSimpleRNG()
+	rng := xr.MakeSimpleRNG()
 	var count int = 3 + rng.Intn(16)
 	for i := 0; i < count; i++ {
 		s := s.noDotsOrDashes(rng)

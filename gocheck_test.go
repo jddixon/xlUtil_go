@@ -1,4 +1,4 @@
-package util
+package xlUtil_go
 
 import (
 	. "gopkg.in/check.v1"

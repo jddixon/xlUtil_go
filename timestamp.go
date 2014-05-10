@@ -1,6 +1,6 @@
-package util
+package xlUtil_go
 
-// xlattice_go/util/timestamp.go
+// xlUtil_go/timestamp.go
 
 import (
 	"time"

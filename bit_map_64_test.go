@@ -1,6 +1,6 @@
-package util
+package xlUtil_go
 
-// xlattice_go/util/bit_map_64_test.go
+// xlUtil_go/bit_map_64_test.go
 
 import (
 	"fmt"

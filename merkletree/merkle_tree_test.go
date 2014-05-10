@@ -1,6 +1,6 @@
 package merkletree
 
-// xlattice_go/util/merkletree/merkle_tree_test.go
+// xlUtil_go/merkletree/merkle_tree_test.go
 
 import (
 	"bytes"
@@ -8,11 +8,11 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"fmt"
-	xr "github.com/jddixon/xlattice_go/rnglib"
+	xr "github.com/jddixon/rnglib_go"
 	xf "github.com/jddixon/xlattice_go/util/lfs"
+	. "gopkg.in/check.v1"
 	"hash"
 	"io/ioutil"
-	. "gopkg.in/check.v1"
 	"os"
 	"path"
 	"strings"

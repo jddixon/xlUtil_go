@@ -1,6 +1,6 @@
-package util
+package xlUtil_go
 
-// xlattice_go/util/errors.go
+// xlUtil_go/errors.go
 
 import (
 	e "errors"

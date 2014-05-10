@@ -1,10 +1,10 @@
-package util
+package xlUtil_go
 
-// xlattice_go/util/decimal_version_test.go
+//xlUtil_go/decimal_version_test.go
 
 import (
 	"fmt"
-	xr "github.com/jddixon/xlattice_go/rnglib"
+	xr "github.com/jddixon/rnglib_go"
 	. "gopkg.in/check.v1"
 )
 
