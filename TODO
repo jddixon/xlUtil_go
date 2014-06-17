@@ -1,5 +1,10 @@
 xl_util/TODO
 
+2014-05-10
+    * need xlattice_go/cmd/gMerkleize/
+       http://blog.neutrino.es/2012/git-copy-a-file-or-directory-from-another-repository-preserving-history/ 
+
+
 2014-05-09
     * remove any XLattice_go dependenies                                * DONE
     * for consistency rename this repo xlUtil_go                        * DONE
