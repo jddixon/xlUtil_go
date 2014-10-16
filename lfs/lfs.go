@@ -3,6 +3,8 @@ package lfs
 // xlUtil_go/fs/lfs.go
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"strings"
 )
@@ -10,13 +12,23 @@ import (
 // If the directory named does not exist, create it, restricting
 // visibility to the owner.  If the directory name is empty, call it
 // "lfs", that is, ./lfs/
+//
+// XXX If the directory named exists, permissions are no inspected.
 
 func CheckLFS(lfs string) (err error) {
-	// XXX should verify that LFS is a directory
 	if lfs == "" {
 		lfs = "lfs"
 	}
-	return os.MkdirAll(lfs, 0700)
+	fileInfo, err := os.Stat(lfs)
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(lfs, 0700)
+	} else if err == nil {
+		if !fileInfo.IsDir() {
+			errMsg := fmt.Sprintf("%s is not a directory", lfs)
+			err = errors.New(errMsg)
+		}
+	}
+	return
 }
 
 // Given a path to a file, create any missing intermediate directories.
