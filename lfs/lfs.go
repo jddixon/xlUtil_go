@@ -9,19 +9,20 @@ import (
 	"strings"
 )
 
-// If the directory named does not exist, create it, restricting
-// visibility to the owner.  If the directory name is empty, call it
+// If the directory named does not exist, create it.  The permisssions
+// passed are ORed with 0700.  If the directory name is empty, call it
 // "lfs", that is, ./lfs/
 //
 // XXX If the directory named exists, permissions are no inspected.
 
-func CheckLFS(lfs string) (err error) {
+func CheckLFS(lfs string, perm os.FileMode) (err error) {
+	perm |= 0700
 	if lfs == "" {
 		lfs = "lfs"
 	}
 	fileInfo, err := os.Stat(lfs)
 	if os.IsNotExist(err) {
-		err = os.MkdirAll(lfs, 0700)
+		err = os.MkdirAll(lfs, perm)
 	} else if err == nil {
 		if !fileInfo.IsDir() {
 			errMsg := fmt.Sprintf("%s is not a directory", lfs)

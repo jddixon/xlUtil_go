@@ -1,5 +1,8 @@
 xlUtil_go/CHANGES
 
+v0.6.0
+    2014-10-17
+        * added FileMode parameter to lfs.CheckLFS()                SLOC 2074
 v0.5.1
     2014-10-16
         * improved lfs.CheckLFS()                                   SLOC 2073

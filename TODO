@@ -1,10 +1,10 @@
 xl_util/TODO
 
+2014-10-16
+    * lfs/CheckLFS() is too restrictive; change interface to            * DONE
+        CheckLFS(path, perm) and then OR perm with 0700                 * DONE
+
 2014-05-10
     * need xlattice_go/cmd/gMerkleize/
        http://blog.neutrino.es/2012/git-copy-a-file-or-directory-from-another-repository-preserving-history/ 
 
-
-2014-05-09
-    * remove any XLattice_go dependenies                                * DONE
-    * for consistency rename this repo xlUtil_go                        * DONE
