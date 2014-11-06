@@ -29,3 +29,24 @@ func NextPow2(n uint) (k uint) {
 	}
 	return k
 }
+
+// Return the smallest number integer k where 2^k is greater than
+// or equal to n.
+func NextExp2(n uint) (k uint) {
+
+	if n == 0 || n == uint(1) {
+		k = uint(0)
+	} else if  n == uint(2) {
+		k = uint(1)
+	} else {
+		f := float64(n)
+		frac, exp := math.Frexp(f)
+		//we are guaranteed that frac is in [1/2, 1)
+		if frac == float64(0.5) {
+			k = uint(exp - 1)
+		} else {
+			k = uint(exp)
+		}
+	}
+	return k
+}
