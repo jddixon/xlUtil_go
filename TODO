@@ -1,5 +1,8 @@
 xl_util/TODO
 
+2014-11-05
+    * URGENT math/NextPow2() needs cleaning up: it won't work sometimes
+
 2014-10-16
     * lfs/CheckLFS() is too restrictive; change interface to            * DONE
         CheckLFS(path, perm) and then OR perm with 0700                 * DONE
