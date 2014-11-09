@@ -1,5 +1,11 @@
 xlUtil_go/CHANGES
 
+v0.6.2
+    2014-11-08
+        * added NextPow2_32() and test                              SLOC 2247
+v0.6.1
+    2014-11-06
+        * added NextPow2(), NextExp2()                              SLOC 2161
 v0.6.0
     2014-10-17
         * added FileMode parameter to lfs.CheckLFS()                SLOC 2074
