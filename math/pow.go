@@ -52,8 +52,8 @@ func NextExp2(n uint) (k uint) {
 }
 
 var (
-	LOG_TABLE_256 = []uint8{
-		0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,
+	LOG_TABLE_256 = []int{
+		-1, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,
 		4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 		5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
 		5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -72,16 +72,13 @@ var (
 	}
 )
 
-// Return the smallest unsigned integer k where 2^k is greater than
-// or equal to n.
-func NextExp2_32(n uint32) (exp uint8) {
+// Return the smallest non-negative integer exp where 2^exp is
+// greater than or equal to n.
+func NextExp2_32(n uint32) (exp int) {
 
-	if n == 0 || n == uint32(1) {
-		exp = uint8(0)
+	if n == 0 {
+		exp = 0
 	} else {
-		isPow2 := (n & (n - 1)) == 0
-		_ = isPow2
-
 		test16 := n >> 16
 		if test16 > 0 {
 			test8 := test16 >> 8
@@ -98,12 +95,69 @@ func NextExp2_32(n uint32) (exp uint8) {
 				exp = LOG_TABLE_256[n]
 			}
 		}
+		isPow2 := (n & (n - 1)) == 0
+		if !isPow2 {
+			exp++
+		}
+	}
+	return exp
+}
+
+// Return the smallest non-negative integer exp where 2^exp is
+// greater than or equal to n.
+func NextExp2_64(n uint64) (exp int) {
+
+	if n == 0 {
+		exp = 0
+	} else {
+		test32 := n >> 32
+		if test32 > 0 {
+			// DEBUG
+			// END
+			test16 := test32 >> 16
+			if test16 > 0 {
+				test8 := test16 >> 8
+				if test8 > 0 {
+					exp = 56 + LOG_TABLE_256[test8]
+				} else {
+					exp = 48 + LOG_TABLE_256[test16]
+				}
+			} else {
+				test8 := test32 >> 8
+				if test8 > 0 {
+					exp = 40 + LOG_TABLE_256[test8]
+				} else {
+					exp = 32 + LOG_TABLE_256[test32]
+				}
+			}
+		} else {
+			// high order 32 bits are 0
+			test16 := n >> 16
+			if test16 > 0 {
+				test8 := test16 >> 8
+				if test8 > 0 {
+					exp = 24 + LOG_TABLE_256[test8]
+				} else {
+					exp = 16 + LOG_TABLE_256[test16]
+				}
+			} else {
+				// high order 48 bits are 0
+				test8 := n >> 8
+				if test8 > 0 {
+					exp = 8 + LOG_TABLE_256[test8]
+				} else {
+					exp = LOG_TABLE_256[n]
+				}
+			}
+		}
+
+		isPow2 := (n & (n - 1)) == 0
 		if !isPow2 {
 			exp++
 		}
 	}
 	// DEBUG
-	//fmt.Printf("for n = %d, next power of 2 is %d\n", n, exp)
+	fmt.Printf("for n = uint64 %016x, next exp of 2 is %d\n", n, exp)
 	// END
 	return exp
 }

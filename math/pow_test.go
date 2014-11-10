@@ -49,27 +49,27 @@ func (s *XLSuite) TestExp2_32(c *C) {
 	rng := xr.MakeSimpleRNG()
 	_ = rng
 
-	c.Assert(NextExp2_32(0), Equals, uint8(0))
-	c.Assert(NextExp2_32(1), Equals, uint8(0))
-	c.Assert(NextExp2_32(2), Equals, uint8(1))
-	c.Assert(NextExp2_32(7), Equals, uint8(3))
-	c.Assert(NextExp2_32(8), Equals, uint8(3))
-	c.Assert(NextExp2_32(9), Equals, uint8(4))
-	c.Assert(NextExp2_32(1023), Equals, uint8(10))
-	c.Assert(NextExp2_32(1024), Equals, uint8(10))
-	c.Assert(NextExp2_32(1025), Equals, uint8(11))
+	c.Assert(NextExp2_32(0), Equals, 0)
+	c.Assert(NextExp2_32(1), Equals, 0)
+	c.Assert(NextExp2_32(2), Equals, 1)
+	c.Assert(NextExp2_32(7), Equals, 3)
+	c.Assert(NextExp2_32(8), Equals, 3)
+	c.Assert(NextExp2_32(9), Equals, 4)
+	c.Assert(NextExp2_32(1023), Equals, 10)
+	c.Assert(NextExp2_32(1024), Equals, 10)
+	c.Assert(NextExp2_32(1025), Equals, 11)
 
 	// brute force test of all powers of 2
 	n := uint32(1)
-	for i := uint8(0); i < uint8(32); i++ {
+	for i := 0; i < 32; i++ {
 		c.Assert(NextExp2_32(n), Equals, i)
 		n = n << 1
 	}
 	// quasi-random tests of values in the range [3, 2^32)
 	for i := 0; i < 16; i++ {
-		exp := uint8(rng.Intn(32)) // so 0..31 inclusive
-		flag := uint32(1)          // becomes 1 followed by zero or more zeroes
-		for i := uint8(0); i < exp; i++ {
+		exp := rng.Intn(32) // so 0.. inclusive
+		flag := uint32(1)   // becomes 1 followed by zero or more zeroes
+		for i := 0; i < exp; i++ {
 			flag <<= 1
 		}
 		var lowBits uint32
@@ -81,6 +81,49 @@ func (s *XLSuite) TestExp2_32(c *C) {
 			c.Assert(NextExp2_32(n), Equals, exp)
 		} else {
 			c.Assert(NextExp2_32(n), Equals, exp+1)
+		}
+	}
+}
+func (s *XLSuite) TestExp2_64(c *C) {
+	if VERBOSITY > 0 {
+		fmt.Println("TEST_EXP2_64")
+	}
+	rng := xr.MakeSimpleRNG()
+	_ = rng
+
+	c.Assert(NextExp2_64(0), Equals, 0)
+	c.Assert(NextExp2_64(1), Equals, 0)
+	c.Assert(NextExp2_64(2), Equals, 1)
+	c.Assert(NextExp2_64(7), Equals, 3)
+	c.Assert(NextExp2_64(8), Equals, 3)
+	c.Assert(NextExp2_64(9), Equals, 4)
+	c.Assert(NextExp2_64(1023), Equals, 10)
+	c.Assert(NextExp2_64(1024), Equals, 10)
+	c.Assert(NextExp2_64(1025), Equals, 11)
+
+	// brute force test of all powers of 2
+	n := uint64(1)
+	for i := 0; i < 64; i++ {
+		c.Assert(NextExp2_64(n), Equals, i)
+		n = n << 1
+	}
+	// quasi-random tests of values in the range [3, 2^63), restricted
+	// to 63 bits because we use Int63n() to generate lowBits
+	for i := 0; i < 16; i++ {
+		exp := rng.Intn(63) // so 0..62 inclusive
+		flag := uint64(1)   // becomes 1 followed by zero or more zeroes
+		for i := 0; i < exp; i++ {
+			flag <<= 1
+		}
+		var lowBits uint64
+		if flag > uint64(1) {
+			lowBits = uint64(rng.Int63n(int64(flag)))
+		}
+		n = flag + lowBits
+		if lowBits == uint64(0) {
+			c.Assert(NextExp2_64(n), Equals, exp)
+		} else {
+			c.Assert(NextExp2_64(n), Equals, exp+1)
 		}
 	}
 }
