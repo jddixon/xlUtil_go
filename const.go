@@ -1,8 +1,8 @@
 package xlUtil_go
 
 const (
-	VERSION      = "0.6.3"
-	VERSION_DATE = "2014-11-09"
+	VERSION      = "0.6.4"
+	VERSION_DATE = "2014-11-10"
 )
 const (
 	MAX_INT  = int(^uint(0) >> 1)

@@ -1,11 +1,14 @@
 xlUtil_go/CHANGES
 
+v0.6.4
+    2014-11-10
+        * added NextPow2_32(), NextPow2_64(), and tests             SLOC 2422
 v0.6.3
     2014-11-09
-        * bugfix plus added NextPow2_64() and test                  SLOC 2332
+        * bugfix plus added NextExp2_64() and test                  SLOC 2332
 v0.6.2
     2014-11-08
-        * added NextPow2_32() and test                              SLOC 2247
+        * added NextExp2_32() and test                              SLOC 2247
 v0.6.1
     2014-11-06
         * added NextPow2(), NextExp2()                              SLOC 2161

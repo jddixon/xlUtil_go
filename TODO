@@ -2,15 +2,15 @@ xl_util/TODO
 
 2014-11-08
     * implement NextExp2_32(), 32-bit version of NextExp2() and test    * DONE
-    * implement NextExp2_64(), 64-bit version of NextPow2() and test
-    * implement NextPow2_32(), 32-bit version of NextPow2() and test
-    * implement NextPow2_64(), 64-bit version of NextPow2() and test
+    * implement NextExp2_64(), 64-bit version of NextPow2() and test    * DONE
+    * implement NextPow2_32(), 32-bit version of NextPow2() and test    * DONE
+    * implement NextPow2_64(), 64-bit version of NextPow2() and test    * DONE
     
-    * mark NextExp2(), NextPow2() deprecated
+    * mark NextExp2(), NextPow2() deprecated                            * DONE
     * delete in next development cycle
 
 2014-11-05
-    * URGENT math/NextPow2() needs cleaning up: it won't work sometimes
+    * URGENT math/NextPow2() needs cleaning up: it won't work sometimes * DEP
 
 2014-10-16
     * lfs/CheckLFS() is too restrictive; change interface to            * DONE

@@ -11,6 +11,8 @@ var _ = fmt.Printf
 
 // Return the smallest number k which is a power of two and greater than
 // or equal to n.
+//
+// XXX DEPRECATED
 func NextPow2(n uint) (k uint) {
 
 	if n == 0 {
@@ -32,6 +34,8 @@ func NextPow2(n uint) (k uint) {
 
 // Return the smallest number integer k where 2^k is greater than
 // or equal to n.
+//
+// XXX DEPRECATED
 func NextExp2(n uint) (k uint) {
 
 	if n == 0 || n == uint(1) {
@@ -157,7 +161,48 @@ func NextExp2_64(n uint64) (exp int) {
 		}
 	}
 	// DEBUG
-	fmt.Printf("for n = uint64 %016x, next exp of 2 is %d\n", n, exp)
+	//fmt.Printf("for n = uint64 %016x, next exp of 2 is %d\n", n, exp)
 	// END
 	return exp
+}
+
+// Return the smallest 32-bit number k which is a power of two and greater
+// than // or equal to n.
+func NextPow2_32(n uint32) (k uint32) {
+
+	if n == 0 {
+		k = uint32(1)
+	} else if (n & (n - 1)) == 0 {
+		return n // is a power of 2
+	} else {
+		k = n - 1
+		k |= k >> 1
+		k |= k >> 2
+		k |= k >> 4
+		k |= k >> 8
+		k |= k >> 16
+		k++
+	}
+	return k
+}
+
+// Return the smallest 64-bit number k which is a power of two and greater
+// than or equal to n.
+func NextPow2_64(n uint64) (k uint64) {
+
+	if n == 0 {
+		k = uint64(1)
+	} else if (n & (n - 1)) == 0 {
+		return n // is a power of 2
+	} else {
+		k = n - 1
+		k |= k >> 1
+		k |= k >> 2
+		k |= k >> 4
+		k |= k >> 8
+		k |= k >> 16
+		k |= k >> 32
+		k++
+	}
+	return k
 }

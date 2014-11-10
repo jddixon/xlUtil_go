@@ -6,6 +6,8 @@ import (
 	. "gopkg.in/check.v1"
 )
 
+// XXX DEPRECATED
+//
 func (s *XLSuite) TestPow2(c *C) {
 	if VERBOSITY > 0 {
 		fmt.Println("TEST_POW2")
@@ -24,6 +26,8 @@ func (s *XLSuite) TestPow2(c *C) {
 	c.Assert(NextPow2(1025), Equals, uint(2048))
 }
 
+// XXX DEPRECATED
+//
 func (s *XLSuite) TestExp2(c *C) {
 	if VERBOSITY > 0 {
 		fmt.Println("TEST_EXP2")
@@ -125,5 +129,75 @@ func (s *XLSuite) TestExp2_64(c *C) {
 		} else {
 			c.Assert(NextExp2_64(n), Equals, exp+1)
 		}
+	}
+}
+
+func (s *XLSuite) TestPow2_32(c *C) {
+	if VERBOSITY > 0 {
+		fmt.Println("TEST_POW2_32")
+	}
+	rng := xr.MakeSimpleRNG()
+	_ = rng
+
+	c.Assert(NextPow2_32(0), Equals, uint32(1))
+	c.Assert(NextPow2_32(1), Equals, uint32(1))
+	c.Assert(NextPow2_32(2), Equals, uint32(2))
+	c.Assert(NextPow2_32(7), Equals, uint32(8))
+	c.Assert(NextPow2_32(8), Equals, uint32(8))
+	c.Assert(NextPow2_32(9), Equals, uint32(16))
+	c.Assert(NextPow2_32(1023), Equals, uint32(1024))
+	c.Assert(NextPow2_32(1024), Equals, uint32(1024))
+	c.Assert(NextPow2_32(1025), Equals, uint32(2048))
+
+	// Test all powers of 2
+	n := uint32(4)
+	for i := 2; i < 32; i++ {
+		c.Assert(NextPow2_32(n), Equals, n)
+		n <<= 1
+	}
+
+	// Test random values
+	n = uint32(4)
+	for i := 2; i < 31; i++ {
+		lowBits := uint32(rng.Int31n(int32(n)))
+		if lowBits != uint32(0) {
+			c.Assert(NextPow2_32(n+lowBits), Equals, 2*n)
+		}
+		n <<= 1
+	}
+}
+
+func (s *XLSuite) TestPow2_64(c *C) {
+	if VERBOSITY > 0 {
+		fmt.Println("TEST_POW2_64")
+	}
+	rng := xr.MakeSimpleRNG()
+	_ = rng
+
+	c.Assert(NextPow2_64(0), Equals, uint64(1))
+	c.Assert(NextPow2_64(1), Equals, uint64(1))
+	c.Assert(NextPow2_64(2), Equals, uint64(2))
+	c.Assert(NextPow2_64(7), Equals, uint64(8))
+	c.Assert(NextPow2_64(8), Equals, uint64(8))
+	c.Assert(NextPow2_64(9), Equals, uint64(16))
+	c.Assert(NextPow2_64(1023), Equals, uint64(1024))
+	c.Assert(NextPow2_64(1024), Equals, uint64(1024))
+	c.Assert(NextPow2_64(1025), Equals, uint64(2048))
+
+	// Test all powers of 2
+	n := uint64(4)
+	for i := 2; i < 64; i++ {
+		c.Assert(NextPow2_64(n), Equals, n)
+		n <<= 1
+	}
+
+	// Test random values
+	n = uint64(4)
+	for i := 2; i < 63; i++ {
+		lowBits := uint64(rng.Int63n(int64(n)))
+		if lowBits != uint64(0) {
+			c.Assert(NextPow2_64(n+lowBits), Equals, 2*n)
+		}
+		n <<= 1
 	}
 }
