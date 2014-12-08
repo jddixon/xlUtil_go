@@ -10,7 +10,7 @@ xl_util/TODO
     * delete in next development cycle
 
 2014-11-05
-    * URGENT math/NextPow2() needs cleaning up: it won't work sometimes * DEP
+    * URGENT math/NextPow2() needs cleaning up: it won't work sometimes * DONE
 
 2014-10-16
     * lfs/CheckLFS() is too restrictive; change interface to            * DONE

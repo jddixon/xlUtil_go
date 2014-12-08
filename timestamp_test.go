@@ -3,13 +3,13 @@ package xlUtil_go
 // xlUtil_go/timestamp_test.go
 
 import (
-	"github.com/jddixon/xlattice_go/rnglib"
+	xr "github.com/jddixon/rnglib_go"
 	. "gopkg.in/check.v1"
 	"time"
 )
 
 func (s *XLSuite) TestGoodTimes(c *C) {
-	rng := rnglib.MakeSimpleRNG()
+	rng := xr.MakeSimpleRNG()
 	_ = rng
 
 	stdLayout := "Mon Jan 2 15:04:05 -0700 MST 2006"

@@ -7,13 +7,8 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"fmt"
-	xf "github.com/jddixon/xlattice_go/util/lfs"
-	//"hash"
+	xf "github.com/jddixon/xlUtil_go/lfs"
 	"io/ioutil"
-	//"os"
-	//"path"
-	// re "regexp"
-	//"strings"
 )
 
 var _ = fmt.Print

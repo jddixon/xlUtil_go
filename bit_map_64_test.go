@@ -4,7 +4,7 @@ package xlUtil_go
 
 import (
 	"fmt"
-	"github.com/jddixon/xlattice_go/rnglib"
+	xr "github.com/jddixon/rnglib_go"
 	. "gopkg.in/check.v1"
 )
 
@@ -12,7 +12,7 @@ func (s *XLSuite) TestBitMap64(c *C) {
 	if VERBOSITY > 0 {
 		fmt.Println("TEST_BIT_MAP_64")
 	}
-	rng := rnglib.MakeSimpleRNG()
+	rng := xr.MakeSimpleRNG()
 
 	_ = rng
 
@@ -28,7 +28,7 @@ func (s *XLSuite) TestCounts(c *C) {
 	if VERBOSITY > 0 {
 		fmt.Println("TEST_COUNTS")
 	}
-	rng := rnglib.MakeSimpleRNG()
+	rng := xr.MakeSimpleRNG()
 
 	for i := 0; i < 8; i++ {
 		x := uint64(rng.Int63())
@@ -47,7 +47,7 @@ func (s *XLSuite) TestSetAndClear(c *C) {
 	if VERBOSITY > 0 {
 		fmt.Println("TEST_SET_AND_CLEAR")
 	}
-	rng := rnglib.MakeSimpleRNG()
+	rng := xr.MakeSimpleRNG()
 
 	// Set(0) and Clear(0) were wrong before 2013-09-29
 	z := NewBitMap64(0)
@@ -67,7 +67,7 @@ func (s *XLSuite) TestOtherFuncs(c *C) {
 	if VERBOSITY > 0 {
 		fmt.Println("TEST_OTHER_FUNCS")
 	}
-	rng := rnglib.MakeSimpleRNG()
+	rng := xr.MakeSimpleRNG()
 
 	for i := 0; i < 8; i++ {
 		x := uint64(rng.Int63())

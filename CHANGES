@@ -1,5 +1,8 @@
 xlUtil_go/CHANGES
 
+v0.6.5
+    2014-12-07
+        * package name changes                                      SLOC 2423
 v0.6.4
     2014-11-10
         * added NextPow2_32(), NextPow2_64(), and tests             SLOC 2422
