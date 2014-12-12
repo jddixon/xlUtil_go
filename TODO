@@ -1,5 +1,12 @@
 xl_util/TODO
 
+2014-12-11
+    * consolidate BitCount32/64() from hamt_go and bit_map_64.go
+        into a file under xlUtil_go/math; this will subsume popCount3
+        and popCount4(), which are currently not used anywhere else
+    * eventually this will become a wrapper around a call to the C 
+        language xlattice_c library
+
 2014-11-08
     * implement NextExp2_32(), 32-bit version of NextExp2() and test    * DONE
     * implement NextExp2_64(), 64-bit version of NextPow2() and test    * DONE

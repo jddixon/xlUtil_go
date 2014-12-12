@@ -98,8 +98,8 @@ func (bm *BitMap64) Complement() *BitMap64 {
 	return &BitMap64{Bits: ^bm.Bits}
 }
 
-// Returns a count of the bits set (equal to 1) in the bit map.
-func (bm *BitMap64) Count() int {
+// Returns a count of the bits set (that is, equal to 1) in the bit map.
+func (bm *BitMap64) Count() uint {
 	return popCount3(bm.Bits)
 }
 
@@ -176,29 +176,3 @@ func (bm *BitMap64) Union(other *BitMap64) *BitMap64 {
 	return &BitMap64{Bits: b}
 }
 
-// POP_COUNT AND SUCH ///////////////////////////////////////////////
-
-// See Wikipedia: http://en.wikipedia.org/wiki/Hamming_weight.
-
-const (
-	m1  = 0x5555555555555555
-	m2  = 0x3333333333333333
-	m4  = 0x0f0f0f0f0f0f0f0f
-	h01 = 0x0101010101010101
-)
-
-// Code suitable for machines with a fast multiply operation.
-func popCount3(x uint64) (count int) {
-	x -= (x >> 1) & m1
-	x = (x & m2) + ((x >> 2) & m2)
-	x = (x + (x >> 4)) & m4
-	return int((x * h01) >> 56)
-}
-
-// Better for cases where few bits are non-zero
-func popCount4(x uint64) (count int) {
-	for count = 0; x != 0; count++ {
-		x &= x - 1
-	}
-	return
-}

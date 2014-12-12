@@ -24,24 +24,6 @@ func (s *XLSuite) TestBitMap64(c *C) {
 		b = (b << 1) | 1
 	}
 }
-func (s *XLSuite) TestCounts(c *C) {
-	if VERBOSITY > 0 {
-		fmt.Println("TEST_COUNTS")
-	}
-	rng := xr.MakeSimpleRNG()
-
-	for i := 0; i < 8; i++ {
-		x := uint64(rng.Int63())
-
-		// these operate on uint64s, not BitMap64s
-		count3 := popCount3(x)
-		c.Assert(count3, Equals, popCount4(x))
-
-		// test the BitMap64 operation
-		b := NewBitMap64(x)
-		c.Assert(b.Count(), Equals, count3)
-	}
-}
 
 func (s *XLSuite) TestSetAndClear(c *C) {
 	if VERBOSITY > 0 {
@@ -103,13 +85,13 @@ func (s *XLSuite) TestOtherFuncs(c *C) {
 			// it's set
 			rr := xx.Flip(n)
 			c.Assert(rr.Count(), Equals, count-1)
-			c.Assert(xx.Difference(rr).Count(), Equals, 1)
+			c.Assert(xx.Difference(rr).Count(), Equals, uint(1))
 
 		} else {
 			// the bit is not set
 			rr := xx.Flip(n)
 			c.Assert(rr.Count(), Equals, count+1)
-			c.Assert(rr.Difference(xx).Count(), Equals, 1)
+			c.Assert(rr.Difference(xx).Count(), Equals, uint(1))
 		}
 	}
 }
