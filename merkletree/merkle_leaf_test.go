@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"code.google.com/p/go.crypto/sha3"
 	"crypto/sha1"
+	"crypto/sha256"
 	"fmt"
 	xr "github.com/jddixon/rnglib_go"
 	. "gopkg.in/check.v1"
@@ -11,19 +12,19 @@ import (
 	"strings"
 )
 
-func (s *XLSuite) doTestSimpleConstructor(c *C, rng *xr.PRNG, usingSHA1 bool) {
+func (s *XLSuite) doTestSimpleConstructor(c *C, rng *xr.PRNG, whichSHA int) {
 	fileName := rng.NextFileName(8)
-	leaf1, err := NewMerkleLeaf(fileName, nil, usingSHA1)
+	leaf1, err := NewMerkleLeaf(fileName, nil, whichSHA)
 	c.Assert(err, IsNil)
 	c.Assert(leaf1.Name(), Equals, fileName)
 	c.Assert(len(leaf1.GetHash()), Equals, 0)
-	c.Assert(leaf1.UsingSHA1(), Equals, usingSHA1)
+	c.Assert(leaf1.WhichSHA(), Equals, whichSHA)
 
 	fileName2 := rng.NextFileName(8)
 	for fileName2 == fileName {
 		fileName2 = rng.NextFileName(8)
 	}
-	leaf2, err := NewMerkleLeaf(fileName2, nil, usingSHA1)
+	leaf2, err := NewMerkleLeaf(fileName2, nil, whichSHA)
 	c.Assert(err, IsNil)
 	c.Assert(leaf2.Name(), Equals, fileName2)
 
@@ -31,7 +32,7 @@ func (s *XLSuite) doTestSimpleConstructor(c *C, rng *xr.PRNG, usingSHA1 bool) {
 	c.Assert(leaf1.Equal(leaf2), Equals, false)
 }
 
-func (s *XLSuite) doTestSHA(c *C, rng *xr.PRNG, usingSHA1 bool) {
+func (s *XLSuite) doTestSHA(c *C, rng *xr.PRNG, whichSHA int) {
 
 	var hash, fHash []byte
 	var sHash string
@@ -45,25 +46,32 @@ func (s *XLSuite) doTestSHA(c *C, rng *xr.PRNG, usingSHA1 bool) {
 	c.Assert(len(parts), Equals, 2)
 	fileName := parts[1]
 
-	if usingSHA1 {
+	switch whichSHA {
+	case USING_SHA1:
 		sha := sha1.New()
 		sha.Write(data)
 		hash = sha.Sum(nil)
 		fHash, err = SHA1File(pathToFile)
-	} else {
+	case USING_SHA2:
+		sha := sha256.New()
+		sha.Write(data)
+		hash = sha.Sum(nil)
+		fHash, err = SHA2File(pathToFile)
+	case USING_SHA3:
 		sha := sha3.NewKeccak256()
 		sha.Write(data)
 		hash = sha.Sum(nil)
 		fHash, err = SHA3File(pathToFile)
+		// XXX DEFAULT = ERROR
 	}
 	c.Assert(err, IsNil)
 	c.Assert(bytes.Equal(hash, fHash), Equals, true)
 
-	ml, err := CreateMerkleLeafFromFileSystem(pathToFile, fileName, usingSHA1)
+	ml, err := CreateMerkleLeafFromFileSystem(pathToFile, fileName, whichSHA)
 	c.Assert(err, IsNil)
 	c.Assert(ml.Name(), Equals, fileName)
 	c.Assert(bytes.Equal(ml.GetHash(), hash), Equals, true)
-	c.Assert(ml.UsingSHA1(), Equals, usingSHA1)
+	c.Assert(ml.WhichSHA(), Equals, whichSHA)
 
 	// TODO: test ToString
 	_ = sHash // TODO
@@ -74,7 +82,8 @@ func (s *XLSuite) TestMerkleLeaf(c *C) {
 		fmt.Println("TEST_MERKLE_LEAF")
 	}
 	rng := xr.MakeSimpleRNG()
-	s.doTestSimpleConstructor(c, rng, true)  // using SHA1
-	s.doTestSimpleConstructor(c, rng, false) // not using SHA1
+	s.doTestSimpleConstructor(c, rng, USING_SHA1)
+	s.doTestSimpleConstructor(c, rng, USING_SHA2)
+	s.doTestSimpleConstructor(c, rng, USING_SHA3)
 
 }

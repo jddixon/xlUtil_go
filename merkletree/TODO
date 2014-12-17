@@ -1,5 +1,12 @@
 // xlattice_go/util/merkletree/TODO
 
+2014-12-16
+    * introduce constants USING_SHA{1,2,3}                              * DONE
+    * replace UsingSHA1() with WhichSHA()
+    * merkle_doc_test.go fails
+    * CRITICAL: figure out how parse*FromStrings distinguishes SHA2 
+        from SHA3!
+
 2013-10-09
     * gMerkleize ignores -t (showTimestamp) and -V (showVersion)
     * -M (match) and -X (exclude) have insufficient testing

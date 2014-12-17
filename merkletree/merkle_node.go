@@ -13,7 +13,7 @@ type MerkleNodeI interface {
 	Name() string
 	GetHash() []byte
 	SetHash([]byte) error
-	UsingSHA1() bool
+	WhichSHA() int
 	IsLeaf() bool
 
 	Equal(any interface{}) bool
@@ -25,12 +25,12 @@ type MerkleNodeI interface {
 }
 
 type MerkleNode struct {
-	name      string
-	hash      []byte
-	usingSHA1 bool
+	name     string
+	hash     []byte
+	whichSHA int
 }
 
-func NewMerkleNode(name string, hash []byte, usingSHA1 bool) (
+func NewMerkleNode(name string, hash []byte, whichSHA int) (
 	mn *MerkleNode, err error) {
 
 	if name == "" {
@@ -44,9 +44,9 @@ func NewMerkleNode(name string, hash []byte, usingSHA1 bool) (
 	}
 	if err == nil {
 		mn = &MerkleNode{
-			name:      name,
-			hash:      hash,
-			usingSHA1: usingSHA1,
+			name:     name,
+			hash:     hash,
+			whichSHA: whichSHA,
 		}
 	}
 	return
@@ -65,8 +65,8 @@ func (mn *MerkleNode) SetHash(value []byte) (err error) {
 	mn.hash = value
 	return
 }
-func (mn *MerkleNode) UsingSHA1() bool {
-	return mn.usingSHA1
+func (mn *MerkleNode) WhichSHA() int {
+	return mn.whichSHA
 }
 func (mn *MerkleNode) Equal(any interface{}) bool {
 	if any == mn {
@@ -89,8 +89,14 @@ func (mn *MerkleNode) Equal(any interface{}) bool {
 	if !bytes.Equal(mn.hash, other.hash) {
 		return false
 	}
-	if mn.usingSHA1 != other.usingSHA1 {
+	if mn.whichSHA != other.whichSHA {
 		return false
 	}
 	return true
+}
+// SERIALIZATION  for debugging
+func (mn *MerkleNode) ToString(indent string) (s string, err error) {
+	s = fmt.Sprintf("MerkleNode: name %s hash %x sha%d\n",
+		mn.name, mn.hash, mn.whichSHA)
+	return
 }

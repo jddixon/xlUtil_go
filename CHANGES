@@ -1,5 +1,8 @@
 xlUtil_go/CHANGES
 
+v0.8.0
+    2014-12-17
+        * introduce SHA2 = sha256                                   SLOC 2599
 v0.7.0
     2014-12-12
         * popCount3/4 replaced; added BitCount32/64 from hamt_go    SLOC 2506

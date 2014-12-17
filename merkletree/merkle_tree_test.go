@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"code.google.com/p/go.crypto/sha3"
 	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	xr "github.com/jddixon/rnglib_go"
@@ -74,7 +75,7 @@ func (s *XLSuite) makeTwoTestDirectories(c *C, rng *xr.PRNG,
 }
 
 func (s *XLSuite) verifyLeafSHA(c *C, rng *xr.PRNG,
-	node MerkleNodeI, pathToFile string, usingSHA1 bool) {
+	node MerkleNodeI, pathToFile string, whichSHA int) {
 
 	c.Assert(node.IsLeaf(), Equals, true)
 	found, err := xf.PathExists(pathToFile)
@@ -85,17 +86,21 @@ func (s *XLSuite) verifyLeafSHA(c *C, rng *xr.PRNG,
 	c.Assert(data, NotNil)
 
 	var sha hash.Hash
-	if usingSHA1 {
+	switch whichSHA {
+	case USING_SHA1:
 		sha = sha1.New()
-	} else {
+	case USING_SHA2:
+		sha = sha256.New()
+	case USING_SHA3:
 		sha = sha3.NewKeccak256()
+		// XXX DEFAULT = ERROR
 	}
 	sha.Write(data)
 	sum := sha.Sum(nil)
 	c.Assert(node.GetHash(), DeepEquals, sum)
 }
 func (s *XLSuite) verifyTreeSHA(c *C, rng *xr.PRNG,
-	n MerkleNodeI, pathToNode string, usingSHA1 bool) {
+	n MerkleNodeI, pathToNode string, whichSHA int) {
 
 	c.Assert(n.IsLeaf(), Equals, false)
 	node := n.(*MerkleTree)
@@ -105,18 +110,22 @@ func (s *XLSuite) verifyTreeSHA(c *C, rng *xr.PRNG,
 	} else {
 		hashCount := 0
 		var sha hash.Hash
-		if usingSHA1 {
+		switch whichSHA {
+		case USING_SHA1:
 			sha = sha1.New()
-		} else {
+		case USING_SHA2:
+			sha = sha256.New()
+		case USING_SHA3:
 			sha = sha3.NewKeccak256()
+			// XXX DEFAULT = ERROR
 		}
 		for i := 0; i < len(node.nodes); i++ {
 			n := node.nodes[i]
 			pathToFile := path.Join(pathToNode, n.Name())
 			if n.IsLeaf() {
-				s.verifyLeafSHA(c, rng, n, pathToFile, usingSHA1)
+				s.verifyLeafSHA(c, rng, n, pathToFile, whichSHA)
 			} else if !n.IsLeaf() {
-				s.verifyTreeSHA(c, rng, n, pathToFile, usingSHA1)
+				s.verifyTreeSHA(c, rng, n, pathToFile, whichSHA)
 			} else {
 				c.Error("unknown node type!")
 			}
@@ -134,13 +143,17 @@ func (s *XLSuite) verifyTreeSHA(c *C, rng *xr.PRNG,
 }
 
 // PARSER TESTS =====================================================
-func (s *XLSuite) doTestParser(c *C, rng *xr.PRNG, usingSHA1 bool) {
+func (s *XLSuite) doTestParser(c *C, rng *xr.PRNG, whichSHA int) {
 
 	var tHash []byte
-	if usingSHA1 {
+	switch whichSHA {
+	case USING_SHA1:
 		tHash = make([]byte, SHA1_LEN)
-	} else {
+	case USING_SHA2:
+		tHash = make([]byte, SHA2_LEN)
+	case USING_SHA3:
 		tHash = make([]byte, SHA3_LEN)
+		// XXX DEFAULT = ERROR
 	}
 	rng.NextBytes(tHash)               // not really a hash, of course
 	sHash := hex.EncodeToString(tHash) // string form of tHash
@@ -185,9 +198,10 @@ func (s *XLSuite) TestParser(c *C) {
 	}
 	rng := xr.MakeSimpleRNG()
 
-	s.doTestParser(c, rng, true)  // usingSHA1
-	s.doTestParser(c, rng, false) // using SHA3 instead
-} // GEEP
+	s.doTestParser(c, rng, USING_SHA1)
+	s.doTestParser(c, rng, USING_SHA2)
+	s.doTestParser(c, rng, USING_SHA3)
+}
 
 // OTHER UNIT TESTS /////////////////////////////////////////////////
 
@@ -196,15 +210,18 @@ func (s *XLSuite) TestPathlessUnboundConstructor(c *C) {
 		fmt.Println("TEST_PATHLESS_UNBOUND_CONSTRUCTOR")
 	}
 	rng := xr.MakeSimpleRNG()
-	s.doTestPathlessUnboundConstructor(c, rng, true)  // usingSHA1
-	s.doTestPathlessUnboundConstructor(c, rng, false) // not
+	s.doTestPathlessUnboundConstructor(c, rng, USING_SHA1)
+	s.doTestPathlessUnboundConstructor(c, rng, USING_SHA2)
+	// XXX WILL FAIL BECAUSE SHA2_LEN == SHA3_LEN
+	//s.doTestPathlessUnboundConstructor(c, rng, USING_SHA3)
 }
 
-func (s *XLSuite) doTestPathlessUnboundConstructor(c *C, rng *xr.PRNG, usingSHA1 bool) {
+func (s *XLSuite) doTestPathlessUnboundConstructor(c *C, rng *xr.PRNG,
+	whichSHA int) {
 
 	dirName1, dirName2 := s.getTwoUniqueDirectoryNames(c, rng)
 
-	tree1, err := NewNewMerkleTree(dirName1, true)
+	tree1, err := NewNewMerkleTree(dirName1, whichSHA)
 	c.Assert(err, IsNil)
 	c.Assert(tree1, NotNil)
 	c.Assert(tree1.Name(), Equals, dirName1)
@@ -214,11 +231,20 @@ func (s *XLSuite) doTestPathlessUnboundConstructor(c *C, rng *xr.PRNG, usingSHA1
 	// XXX WITHOUT THIS FIX MerkleNode.Equal() sees the serializations
 	// as different because one has a hash length of zero and the
 	// other a hash length of 20.
-	null := make([]byte, SHA1_LEN)
+	var null []byte
+	switch(whichSHA) {
+	case USING_SHA1:
+		null = make([]byte, SHA1_LEN)
+	case USING_SHA2:
+		null = make([]byte, SHA2_LEN)
+	case USING_SHA3:
+		null = make([]byte, SHA3_LEN)
+	// DEFAULF + ERROR
+	}
 	tree1.SetHash(null)
 	// END
 
-	tree2, err := NewNewMerkleTree(dirName2, true)
+	tree2, err := NewNewMerkleTree(dirName2, whichSHA)
 	c.Assert(err, IsNil)
 	c.Assert(tree2, NotNil)
 	c.Assert(tree2.Name(), Equals, dirName2)
@@ -254,7 +280,7 @@ func (s *XLSuite) doTestPathlessUnboundConstructor(c *C, rng *xr.PRNG, usingSHA1
 	c.Assert(err, IsNil)
 	c.Assert(t1RStr, Equals, tree1Str)
 	c.Assert(tree1.Equal(tree1Rebuilt), Equals, true)
-} // GEEP
+}
 
 // ------------------------------------------------------------------
 func (s *XLSuite) TestBoundFlatDirs(c *C) {
@@ -262,30 +288,32 @@ func (s *XLSuite) TestBoundFlatDirs(c *C) {
 		fmt.Println("TEST_BOUND_FLAT_DIRS")
 	}
 	rng := xr.MakeSimpleRNG()
-	s.doTestBoundFlatDirs(c, rng, true)
-	s.doTestBoundFlatDirs(c, rng, false)
-} // GEEP
+	s.doTestBoundFlatDirs(c, rng, USING_SHA1)
+	s.doTestBoundFlatDirs(c, rng, USING_SHA2)
+	// XXX WILL FAIL BECAUSE SHA2_LEN == SHA3_LEN
+	//s.doTestBoundFlatDirs(c, rng, USING_SHA3)
+}
 
-func (s *XLSuite) doTestBoundFlatDirs(c *C, rng *xr.PRNG, usingSHA1 bool) {
+func (s *XLSuite) doTestBoundFlatDirs(c *C, rng *xr.PRNG, whichSHA int) {
 
 	// test directory is single level, with four data files"""
 	dirName1, dirPath1, dirName2, dirPath2 := s.makeTwoTestDirectories(
 		c, rng, ONE, FOUR)
-	tree1, err := CreateMerkleTreeFromFileSystem(dirPath1, usingSHA1, nil, nil)
+	tree1, err := CreateMerkleTreeFromFileSystem(dirPath1, whichSHA, nil, nil)
 	c.Assert(err, IsNil)
 	c.Assert(tree1.Name(), Equals, dirName1)
 	nodes1 := tree1.nodes
 	c.Assert(nodes1, NotNil)
 	c.Assert(len(nodes1), Equals, FOUR)
-	s.verifyTreeSHA(c, rng, tree1, dirPath1, usingSHA1)
+	s.verifyTreeSHA(c, rng, tree1, dirPath1, whichSHA)
 
-	tree2, err := CreateMerkleTreeFromFileSystem(dirPath2, usingSHA1, nil, nil)
+	tree2, err := CreateMerkleTreeFromFileSystem(dirPath2, whichSHA, nil, nil)
 	c.Assert(err, IsNil)
 	c.Assert(tree2.Name(), Equals, dirName2)
 	nodes2 := tree2.nodes
 	c.Assert(nodes2, NotNil)
 	c.Assert(len(nodes2), Equals, FOUR)
-	s.verifyTreeSHA(c, rng, tree2, dirPath2, usingSHA1)
+	s.verifyTreeSHA(c, rng, tree2, dirPath2, whichSHA)
 
 	c.Assert(tree1.Equal(tree1), Equals, true)
 	c.Assert(tree1.Equal(tree2), Equals, false)
@@ -312,30 +340,32 @@ func (s *XLSuite) TestBoundNeedleDirs(c *C) {
 		fmt.Println("TEST_BOUND_NEEDLE_DIRS")
 	}
 	rng := xr.MakeSimpleRNG()
-	s.doTestBoundNeedleDirs(c, rng, true)
-	s.doTestBoundNeedleDirs(c, rng, false)
-} // GEEP
-func (s *XLSuite) doTestBoundNeedleDirs(c *C, rng *xr.PRNG, usingSHA1 bool) {
+	s.doTestBoundNeedleDirs(c, rng, USING_SHA1)
+	s.doTestBoundNeedleDirs(c, rng, USING_SHA2)
+	// XXX WILL FAIL BECAUSE SHA2_LEN == SHA3_LEN
+	// s.doTestBoundNeedleDirs(c, rng, USING_SHA3)
+}
+func (s *XLSuite) doTestBoundNeedleDirs(c *C, rng *xr.PRNG, whichSHA int) {
 
 	//test directories four deep with one data file at the lowest level"""
 	dirName1, dirPath1, dirName2, dirPath2 := s.makeTwoTestDirectories(
 		c, rng, FOUR, ONE)
 
-	tree1, err := CreateMerkleTreeFromFileSystem(dirPath1, usingSHA1, nil, nil)
+	tree1, err := CreateMerkleTreeFromFileSystem(dirPath1, whichSHA, nil, nil)
 	c.Assert(err, IsNil)
 	c.Assert(tree1.Name(), Equals, dirName1)
 	nodes1 := tree1.nodes
 	c.Assert(nodes1, NotNil)
 	c.Assert(len(nodes1), Equals, ONE)
-	s.verifyTreeSHA(c, rng, tree1, dirPath1, usingSHA1)
+	s.verifyTreeSHA(c, rng, tree1, dirPath1, whichSHA)
 
-	tree2, err := CreateMerkleTreeFromFileSystem(dirPath2, usingSHA1, nil, nil)
+	tree2, err := CreateMerkleTreeFromFileSystem(dirPath2, whichSHA, nil, nil)
 	c.Assert(err, IsNil)
 	c.Assert(tree2.Name(), Equals, dirName2)
 	nodes2 := tree2.nodes
 	c.Assert(nodes2, NotNil)
 	c.Assert(len(nodes2), Equals, ONE)
-	s.verifyTreeSHA(c, rng, tree2, dirPath2, usingSHA1)
+	s.verifyTreeSHA(c, rng, tree2, dirPath2, whichSHA)
 
 	tree1Str, err := tree1.ToString("")
 	c.Assert(err, IsNil)

@@ -1,5 +1,8 @@
 xl_util/TODO
 
+2014-12-17
+    * following Python, introduce SHA2 = sha256                         * DONE
+
 2014-12-11
     * consolidate BitCount32/64() from hamt_go and bit_map_64.go
         into a file under xlUtil_go/math; this will subsume popCount3

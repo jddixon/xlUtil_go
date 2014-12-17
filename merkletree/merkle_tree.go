@@ -5,6 +5,7 @@ package merkletree
 import (
 	"code.google.com/p/go.crypto/sha3"
 	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	xf "github.com/jddixon/xlUtil_go/lfs"
@@ -25,21 +26,21 @@ type MerkleTree struct {
 	nodes   []MerkleNodeI
 
 	path       string
-	MerkleNode // so name, hash, usingSHA1
+	MerkleNode // so name, hash, whichSHA
 }
 
-func NewNewMerkleTree(name string, usingSHA1 bool) (*MerkleTree, error) {
-	return NewMerkleTree(name, usingSHA1, nil, nil)
+func NewNewMerkleTree(name string, whichSHA int) (*MerkleTree, error) {
+	return NewMerkleTree(name, whichSHA, nil, nil)
 }
 
 // Create an unbound MerkleTree with a nil hash and an empty nodes list.
 // exRE and matchRE must have been validated by the calling code
 
-func NewMerkleTree(name string, usingSHA1 bool, exRE, matchRE *re.Regexp) (
+func NewMerkleTree(name string, whichSHA int, exRE, matchRE *re.Regexp) (
 	mt *MerkleTree, err error) {
 
 	// this validates its parameters
-	mn, err := NewMerkleNode(name, nil, usingSHA1)
+	mn, err := NewMerkleNode(name, nil, whichSHA)
 	if err == nil {
 		mt = &MerkleTree{
 			exRE:       exRE,
@@ -118,13 +119,13 @@ func ParseOtherLine(line string) (
 func ParseMerkleTreeFromStrings(ss *[]string) (mt *MerkleTree, err error) {
 
 	var (
-		indent    int
-		treeHash  []byte
-		dirName   string
-		usingSHA1 bool
-		stack     []MerkleNodeI
-		stkDepth  int
-		curTree   *MerkleTree
+		indent   int
+		treeHash []byte
+		dirName  string
+		whichSHA int
+		stack    []MerkleNodeI
+		stkDepth int
+		curTree  *MerkleTree
 		// lastWasDir	bool	// not being used
 	)
 	if len(*ss) == 0 {
@@ -139,8 +140,18 @@ func ParseMerkleTreeFromStrings(ss *[]string) (mt *MerkleTree, err error) {
 		}
 	}
 	if err == nil {
-		usingSHA1 = len(treeHash) == SHA1_LEN
-		mt, err = NewNewMerkleTree(dirName, usingSHA1)
+		// XXX THIS IS STUPID: SHA2 AND SHA3 HAVE THE SAME LENGTH
+		switch len(treeHash) {
+		case SHA1_LEN:
+			whichSHA = USING_SHA1
+		case SHA2_LEN:
+			whichSHA = USING_SHA2
+			// XXX NOT A VALID CASE
+			//case SHA3_LEN:
+			//	whichSHA = USING_SHA3
+			// DEFAULT IS AN ERROR
+		}
+		mt, err = NewNewMerkleTree(dirName, whichSHA)
 		if err != nil {
 			return
 		}
@@ -181,7 +192,7 @@ func ParseMerkleTreeFromStrings(ss *[]string) (mt *MerkleTree, err error) {
 		if isDir {
 			// create and set attributes of a new node
 			var newTree *MerkleTree
-			newTree, err = NewNewMerkleTree(name, usingSHA1)
+			newTree, err = NewNewMerkleTree(name, whichSHA)
 			if err != nil {
 				break
 			}
@@ -195,7 +206,7 @@ func ParseMerkleTreeFromStrings(ss *[]string) (mt *MerkleTree, err error) {
 		} else {
 			var newNode *MerkleLeaf
 			// create and set attributes of new node
-			newNode, err = NewMerkleLeaf(name, thisHash, usingSHA1)
+			newNode, err = NewMerkleLeaf(name, thisHash, whichSHA)
 			if err != nil {
 				break
 			}
@@ -228,14 +239,14 @@ func ParseMerkleTree(s string) (mt *MerkleTree, err error) {
 //            m = re.match(MerkleTree.FIRST_LINE_PAT_1, line)
 //            if m == None:
 //                m = re.match(MerkleTree.FIRST_LINE_PAT_3, line)
-//                usingSHA1 = false
+//                whichSHA = false
 //            else:
-//                usingSHA1 = true
+//                whichSHA = true
 //            if m == None:
 //                raise RuntimeError(
 //                        "line "%s" does not match expected pattern" %  line)
 //            dirName = m.group(3)
-//            tree = MerkleTree(dirName, usingSHA1)
+//            tree = MerkleTree(dirName, whichSHA)
 //#           if m.group(3) != "bind":
 //#               raise RuntimeError(
 //#                       "expected "bind" in first line, found %s" % m.group(3))
@@ -245,7 +256,7 @@ func ParseMerkleTree(s string) (mt *MerkleTree, err error) {
 //                line = line.rstrip()
 //                if line == "":
 //                    continue
-//                if mt.usingSHA1:
+//                if mt.whichSHA:
 //                    m = re.match(MerkleTree.OTHER_LINE_PAT_1, line)
 //                else:
 //                    m = re.match(MerkleTree.OTHER_LINE_PAT_3, line)
@@ -258,7 +269,7 @@ func ParseMerkleTree(s string) (mt *MerkleTree, err error) {
 //
 //        return tree
 
-func CreateMerkleTreeFromFileSystem(pathToDir string, usingSHA1 bool,
+func CreateMerkleTreeFromFileSystem(pathToDir string, whichSHA int,
 	exRE, matchRE *re.Regexp) (tree *MerkleTree, err error) {
 
 	var (
@@ -276,17 +287,21 @@ func CreateMerkleTreeFromFileSystem(pathToDir string, usingSHA1 bool,
 		} else {
 			dirName = parts[len(parts)-1]
 		}
-		tree, err = NewMerkleTree(dirName, usingSHA1, exRE, matchRE)
+		tree, err = NewMerkleTree(dirName, whichSHA, exRE, matchRE)
 	}
 	if err == nil {
 		var shaX hash.Hash
 
 		// we are promised that this is sorted
 		files, err = ioutil.ReadDir(pathToDir)
-		if usingSHA1 {
+		switch whichSHA {
+		case USING_SHA1:
 			shaX = sha1.New()
-		} else {
+		case USING_SHA2:
+			shaX = sha256.New()
+		case USING_SHA3:
 			shaX = sha3.NewKeccak256()
+			// XXX DEFAULT = ERROR
 		}
 		shaXCount := 0
 		for i := 0; i < len(files); i++ {
@@ -312,11 +327,11 @@ func CreateMerkleTreeFromFileSystem(pathToDir string, usingSHA1 bool,
 				continue
 			} else if mode.IsDir() {
 				node, err = CreateMerkleTreeFromFileSystem(
-					pathToFile, usingSHA1, exRE, matchRE)
+					pathToFile, whichSHA, exRE, matchRE)
 			} else if mode.IsRegular() {
 				// XXX will this ignore symlinks?
 				node, err = CreateMerkleLeafFromFileSystem(
-					pathToFile, name, usingSHA1)
+					pathToFile, name, whichSHA)
 			}
 			if err != nil {
 				break
@@ -378,10 +393,14 @@ func (mt *MerkleTree) toStringsNotTop(indent string, ss *[]string) (err error) {
 	var top string
 	topHash := mt.GetHash()
 	if len(topHash) == 0 {
-		if mt.usingSHA1 {
+		switch mt.whichSHA {
+		case USING_SHA1:
 			top = fmt.Sprintf("%s%s %s/", indent, SHA1_NONE, mt.name)
-		} else {
+		case USING_SHA2:
+			top = fmt.Sprintf("%s%s %s/", indent, SHA2_NONE, mt.name)
+		case USING_SHA3:
 			top = fmt.Sprintf("%s%s %s/", indent, SHA3_NONE, mt.name)
+			// XXX DEFAULT = ERROR
 		}
 	} else {
 		hexHash := hex.EncodeToString(topHash)
@@ -411,7 +430,7 @@ func (mt *MerkleTree) toStringsNotTop(indent string, ss *[]string) (err error) {
 //        """ indent is the indentation to be used for the top node"""
 //        s      = []                             # a list of strings
 //        if mt._hash == None:
-//            if mt.usingSHA1:
+//            if mt.whichSHA:
 //                top = "%s%s %s/\r\n" % (indent, SHA1_NONE, mt.name)
 //            else:
 //                top = "%s%s %s/\r\n" % (indent, SHA3_NONE, mt.name)
@@ -441,9 +460,12 @@ func (mt *MerkleTree) ToStrings(indent string, ss *[]string) (err error) {
 	var top string
 	topHash := mt.GetHash()
 	if len(topHash) == 0 {
-		if mt.usingSHA1 {
+		switch mt.whichSHA {
+		case USING_SHA1:
 			top = fmt.Sprintf("%s%s %s/", indent, SHA1_NONE, mt.name)
-		} else {
+		case USING_SHA2:
+			top = fmt.Sprintf("%s%s %s/", indent, SHA2_NONE, mt.name)
+		case USING_SHA3:
 			top = fmt.Sprintf("%s%s %s/", indent, SHA3_NONE, mt.name)
 		}
 	} else {
@@ -488,8 +510,10 @@ func (mt *MerkleTree) Equal(any interface{}) bool {
 	}
 
 	// compare MerkleNode-level properties (name, hash)
+
 	myNode := &mt.MerkleNode
 	otherNode := other.MerkleNode
+
 	if !myNode.Equal(&otherNode) {
 		return false
 	}

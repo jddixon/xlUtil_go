@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"code.google.com/p/go.crypto/sha3"
 	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	xf "github.com/jddixon/xlUtil_go/lfs"
@@ -25,15 +26,15 @@ type MerkleDoc struct {
 	matchRE *re.Regexp // must be matched
 	tree    *MerkleTree
 
-	path      string
-	hash      []byte
-	usingSHA1 bool
+	path     string
+	hash     []byte
+	whichSHA int
 }
 
 // XXX "MUST ADD matchRE and exRE and test on their values at this level."
 
-func NewMerkleDoc(pathToDir string, usingSHA1, binding bool, tree *MerkleTree,
-	exRE, matchRE *re.Regexp) (m *MerkleDoc, err error) {
+func NewMerkleDoc(pathToDir string, whichSHA int, binding bool,
+	tree *MerkleTree, exRE, matchRE *re.Regexp) (m *MerkleDoc, err error) {
 
 	if pathToDir == "" {
 		err = EmptyPath
@@ -43,10 +44,10 @@ func NewMerkleDoc(pathToDir string, usingSHA1, binding bool, tree *MerkleTree,
 			pathToDir = pathToDir[:len(pathToDir)-1]
 		}
 		self := MerkleDoc{
-			exRE:      exRE,
-			matchRE:   matchRE,
-			path:      pathToDir,
-			usingSHA1: usingSHA1,
+			exRE:     exRE,
+			matchRE:  matchRE,
+			path:     pathToDir,
+			whichSHA: whichSHA,
 		}
 		p := &self
 		if tree != nil {
@@ -76,10 +77,14 @@ func (md *MerkleDoc) SetTree(tree *MerkleTree) (err error) {
 		err = NilTree
 	} else {
 		var digest hash.Hash
-		if md.usingSHA1 {
+		switch md.whichSHA {
+		case USING_SHA1:
 			digest = sha1.New()
-		} else {
+		case USING_SHA2:
+			digest = sha256.New()
+		case USING_SHA3:
 			digest = sha3.NewKeccak256()
+		// XXX DEFAULT = ERROR
 		}
 		digest.Write(tree.hash)
 		digest.Write([]byte(md.path))
@@ -132,36 +137,15 @@ func (md *MerkleDoc) GetExRE() *re.Regexp {
 func (md *MerkleDoc) GetMatchRE() *re.Regexp {
 	return md.matchRE
 }
-func (md *MerkleDoc) UsingSHA1() bool {
-	return md.usingSHA1
+func (md *MerkleDoc) WhichSHA() int {
+	return md.whichSHA
 }
-
-//# -------------------------------------------------------------------
-//class MerkleDoc():
-//
-//
-//    @property
-//    def tree(self):
-//        return self._tree
-//
-//    @tree.setter
-//    def tree(self, value):
-//        # XXX CHECKS
-//        self._tree = value
-//
-//    @property
-//    def bound(self):
-//        return self._bound
-//
-//    @property
-//    def usingSHA1(self):
-//        return self._usingSHA1
 
 // Create a MerkleDoc based on the information in the directory at
 // pathToDir.  The name of the directory will be the last component of
 // pathToDir.  Return the MerkleTree.
 
-func CreateMerkleDocFromFileSystem(pathToDir string, usingSHA1 bool,
+func CreateMerkleDocFromFileSystem(pathToDir string, whichSHA int,
 	exclusions, matches []string) (md *MerkleDoc, err error) {
 
 	if len(pathToDir) == 0 {
@@ -202,10 +186,10 @@ func CreateMerkleDocFromFileSystem(pathToDir string, usingSHA1 bool,
 	}
 	if err == nil {
 		tree, err = CreateMerkleTreeFromFileSystem(
-			pathToDir, usingSHA1, exRE, matchRE)
+			pathToDir, whichSHA, exRE, matchRE)
 		if err == nil {
 			// "creates the hash"
-			md, err = NewMerkleDoc(path, usingSHA1, false, tree, exRE, matchRE)
+			md, err = NewMerkleDoc(path, whichSHA, false, tree, exRE, matchRE)
 			if err == nil {
 				md.bound = true
 			}
@@ -247,10 +231,10 @@ func ParseMerkleDoc(s string) (md *MerkleDoc, err error) {
 func ParseMerkleDocFromStrings(ss *[]string) (md *MerkleDoc, err error) {
 
 	var (
-		docHash   []byte
-		path      string
-		tree      *MerkleTree
-		usingSHA1 bool
+		docHash  []byte
+		path     string
+		tree     *MerkleTree
+		whichSHA int
 	)
 	if ss == nil {
 		err = NilSerialization
@@ -258,12 +242,21 @@ func ParseMerkleDocFromStrings(ss *[]string) (md *MerkleDoc, err error) {
 		docHash, path, err = ParseMerkleDocFirstLine((*ss)[0])
 	}
 	if err == nil {
-		usingSHA1 = len(docHash) == SHA1_LEN
+		switch len(docHash) {
+		case SHA1_LEN:
+			whichSHA = USING_SHA1
+		case SHA2_LEN:
+			whichSHA = USING_SHA2
+			// XXX NOT A VALID CASE
+			//case SHA3_LEN:
+			//	whichSHA = USING_SHA3
+			// XXX otherwise internal error
+		}
 		rest := (*ss)[1:]
 		tree, err = ParseMerkleTreeFromStrings(&rest)
 	}
 	if err == nil {
-		md, err = NewMerkleDoc(path, usingSHA1, false, tree, nil, nil)
+		md, err = NewMerkleDoc(path, whichSHA, false, tree, nil, nil)
 	}
 	return
 }
@@ -287,14 +280,14 @@ func ParseMerkleDocFromStrings(ss *[]string) (md *MerkleDoc, err error) {
 //                            MerkleDoc.parseFirstLine(s[0].rstrip())
 //#       print "DEBUG: doc first line: hash = %s, path = %s" % (
 //#                               docHash, docPath)
-//        usingSHA1 = (40 == len(docHash))
+//        whichSHA = (40 == len(docHash))
 //
 //        tree = MerkleTree.createFromStringArray( s[1:] )
 //
 //        #def __init__ (self, path, binding = False, tree = None,
 //        #    exRE    = None,    # exclusions, which are Regular Expressions
 //        #    matchRE = None):   # matches, also Regular Expressions
-//        doc = MerkleDoc( docPath, usingSHA1, False, tree )
+//        doc = MerkleDoc( docPath, whichSHA, False, tree )
 //        doc.hash = docHash
 //        return doc
 //

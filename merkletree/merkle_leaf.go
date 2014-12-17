@@ -5,6 +5,7 @@ package merkletree
 import (
 	"code.google.com/p/go.crypto/sha3"
 	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	xf "github.com/jddixon/xlUtil_go/lfs"
@@ -19,10 +20,10 @@ type MerkleLeaf struct {
 
 // Creates a MerkleTree leaf node.
 
-func NewMerkleLeaf(name string, hash []byte, usingSHA1 bool) (
+func NewMerkleLeaf(name string, hash []byte, whichSHA int) (
 	ml *MerkleLeaf, err error) {
 
-	mn, err := NewMerkleNode(name, hash, usingSHA1)
+	mn, err := NewMerkleNode(name, hash, whichSHA)
 	if err == nil {
 		ml = &MerkleLeaf{*mn}
 	}
@@ -33,17 +34,19 @@ func NewMerkleLeaf(name string, hash []byte, usingSHA1 bool) (
 // system.  To simplify programming, the base name of the file, which is
 // part of the path, is also passed as a separate argument.
 
-func CreateMerkleLeafFromFileSystem(pathToFile, name string, usingSHA1 bool) (
+func CreateMerkleLeafFromFileSystem(pathToFile, name string, whichSHA int) (
 	ml *MerkleLeaf, err error) {
 
 	var hash []byte
-	if usingSHA1 {
+	if whichSHA == USING_SHA1 {
 		hash, err = SHA1File(pathToFile)
+	} else if whichSHA == USING_SHA2 {
+		hash, err = SHA2File(pathToFile)
 	} else {
 		hash, err = SHA3File(pathToFile)
 	}
 	if err == nil {
-		ml, err = NewMerkleLeaf(name, hash, usingSHA1)
+		ml, err = NewMerkleLeaf(name, hash, whichSHA)
 	}
 	return
 }
@@ -75,10 +78,14 @@ func (ml *MerkleLeaf) ToString(indent string) (str string, err error) {
 	var shash string
 	hash := ml.hash
 	if len(hash) == 0 {
-		if ml.usingSHA1 {
+		switch ml.whichSHA {
+		case USING_SHA1:
 			shash = SHA1_NONE
-		} else {
+		case USING_SHA2:
+			shash = SHA2_NONE
+		case USING_SHA3:
 			shash = SHA3_NONE
+			// XXX DEFAULT => ERROR
 		}
 	} else {
 		shash = hex.EncodeToString(hash)
@@ -107,6 +114,25 @@ func SHA1File(pathToFile string) (hash []byte, err error) {
 		data, err = ioutil.ReadFile(pathToFile)
 		if err == nil {
 			digest := sha1.New()
+			digest.Write(data)
+			hash = digest.Sum(nil)
+		}
+	}
+	return
+}
+
+// Return the SHA256 hash of a file.  This is a sequence of 32 bytes.
+
+func SHA2File(pathToFile string) (hash []byte, err error) {
+	var data []byte
+	found, err := xf.PathExists(pathToFile)
+	if err == nil && !found {
+		err = FileNotFound
+	}
+	if err == nil {
+		data, err = ioutil.ReadFile(pathToFile)
+		if err == nil {
+			digest := sha256.New()
 			digest.Write(data)
 			hash = digest.Sum(nil)
 		}
