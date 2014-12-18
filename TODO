@@ -2,6 +2,15 @@ xl_util/TODO
 
 2014-12-17
     * following Python, introduce SHA2 = sha256                         * DONE
+    * move SHA{1,2,3}_LEN and USING_SHA{1,2,3} to xlUtil/const.go       * DONE
+    * fix using code in merkletree/                                     * DONE
+    * update github
+
+    * introduce file format changes (possibly SHA name at end of 
+        first line in file) to make distinguishing SHA2 from SHA3 
+        possible)
+        - python code must adopt the same changes
+    * prove interoperability between golang and python3 code
 
 2014-12-11
     * consolidate BitCount32/64() from hamt_go and bit_map_64.go

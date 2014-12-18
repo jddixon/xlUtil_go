@@ -10,6 +10,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	xr "github.com/jddixon/rnglib_go"
+	xu "github.com/jddixon/xlUtil_go"
 	. "gopkg.in/check.v1"
 	"hash"
 	re "regexp"
@@ -123,12 +124,12 @@ func (s *XLSuite) doTestMDParser(c *C, rng *xr.PRNG, whichSHA int) {
 
 	var tHash []byte
 	switch whichSHA {
-	case USING_SHA1:
-		tHash = make([]byte, SHA1_LEN)
-	case USING_SHA2:
-		tHash = make([]byte, SHA2_LEN)
-	case USING_SHA3:
-		tHash = make([]byte, SHA3_LEN)
+	case xu.USING_SHA1:
+		tHash = make([]byte, xu.SHA1_BIN_LEN)
+	case xu.USING_SHA2:
+		tHash = make([]byte, xu.SHA2_BIN_LEN)
+	case xu.USING_SHA3:
+		tHash = make([]byte, xu.SHA3_BIN_LEN)
 		// DEFAULT = ERROR
 	}
 	rng.NextBytes(tHash)               // not really a hash, of course
@@ -159,9 +160,9 @@ func (s *XLSuite) TestMDParser(c *C) {
 	}
 	rng := xr.MakeSimpleRNG()
 
-	s.doTestMDParser(c, rng, USING_SHA1)
-	s.doTestMDParser(c, rng, USING_SHA2)
-	s.doTestMDParser(c, rng, USING_SHA3)
+	s.doTestMDParser(c, rng, xu.USING_SHA1)
+	s.doTestMDParser(c, rng, xu.USING_SHA2)
+	s.doTestMDParser(c, rng, xu.USING_SHA3)
 }
 
 // OTHER TESTS ======================================================
@@ -171,10 +172,10 @@ func (s *XLSuite) TestMerkleDoc(c *C) {
 		fmt.Println("TEST_MERKLE_DOC_CONSTRUCTOR")
 	}
 	rng := xr.MakeSimpleRNG()
-	s.doTestMerkleDoc(c, rng, USING_SHA1)
-	s.doTestMerkleDoc(c, rng, USING_SHA2)
-	// XXX WILL FAIL BECAUSE SHA2_LEN == SHA3_LEN
-	//s.doTestMerkleDoc(c, rng, USING_SHA3)
+	s.doTestMerkleDoc(c, rng, xu.USING_SHA1)
+	s.doTestMerkleDoc(c, rng, xu.USING_SHA2)
+	// XXX WILL FAIL BECAUSE xu.SHA2_BIN_LEN == xu.SHA3_BIN_LEN
+	//s.doTestMerkleDoc(c, rng, xu.USING_SHA3)
 }
 
 func (s *XLSuite) doTestMerkleDoc(c *C, rng *xr.PRNG, whichSHA int) {
@@ -210,11 +211,11 @@ func (s *XLSuite) doTestMerkleDoc(c *C, rng *xr.PRNG, whichSHA int) {
 
 	var sha hash.Hash
 	switch whichSHA {
-	case USING_SHA1:
+	case xu.USING_SHA1:
 		sha = sha1.New()
-	case USING_SHA2:
+	case xu.USING_SHA2:
 		sha = sha256.New()
-	case USING_SHA3:
+	case xu.USING_SHA3:
 		sha = sha3.NewKeccak256()
 		// XXX DEFAULT = ERROR
 	}

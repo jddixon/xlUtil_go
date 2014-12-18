@@ -8,6 +8,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	xu "github.com/jddixon/xlUtil_go"
 	xf "github.com/jddixon/xlUtil_go/lfs"
 	"io/ioutil"
 )
@@ -38,9 +39,9 @@ func CreateMerkleLeafFromFileSystem(pathToFile, name string, whichSHA int) (
 	ml *MerkleLeaf, err error) {
 
 	var hash []byte
-	if whichSHA == USING_SHA1 {
+	if whichSHA == xu.USING_SHA1 {
 		hash, err = SHA1File(pathToFile)
-	} else if whichSHA == USING_SHA2 {
+	} else if whichSHA == xu.USING_SHA2 {
 		hash, err = SHA2File(pathToFile)
 	} else {
 		hash, err = SHA3File(pathToFile)
@@ -79,11 +80,11 @@ func (ml *MerkleLeaf) ToString(indent string) (str string, err error) {
 	hash := ml.hash
 	if len(hash) == 0 {
 		switch ml.whichSHA {
-		case USING_SHA1:
+		case xu.USING_SHA1:
 			shash = SHA1_NONE
-		case USING_SHA2:
+		case xu.USING_SHA2:
 			shash = SHA2_NONE
-		case USING_SHA3:
+		case xu.USING_SHA3:
 			shash = SHA3_NONE
 			// XXX DEFAULT => ERROR
 		}

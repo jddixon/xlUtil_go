@@ -9,6 +9,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	xu "github.com/jddixon/xlUtil_go"
 	xf "github.com/jddixon/xlUtil_go/lfs"
 	"hash"
 	"path"
@@ -78,13 +79,13 @@ func (md *MerkleDoc) SetTree(tree *MerkleTree) (err error) {
 	} else {
 		var digest hash.Hash
 		switch md.whichSHA {
-		case USING_SHA1:
+		case xu.USING_SHA1:
 			digest = sha1.New()
-		case USING_SHA2:
+		case xu.USING_SHA2:
 			digest = sha256.New()
-		case USING_SHA3:
+		case xu.USING_SHA3:
 			digest = sha3.NewKeccak256()
-		// XXX DEFAULT = ERROR
+			// XXX DEFAULT = ERROR
 		}
 		digest.Write(tree.hash)
 		digest.Write([]byte(md.path))
@@ -243,13 +244,13 @@ func ParseMerkleDocFromStrings(ss *[]string) (md *MerkleDoc, err error) {
 	}
 	if err == nil {
 		switch len(docHash) {
-		case SHA1_LEN:
-			whichSHA = USING_SHA1
-		case SHA2_LEN:
-			whichSHA = USING_SHA2
+		case xu.SHA1_BIN_LEN:
+			whichSHA = xu.USING_SHA1
+		case xu.SHA2_BIN_LEN:
+			whichSHA = xu.USING_SHA2
 			// XXX NOT A VALID CASE
-			//case SHA3_LEN:
-			//	whichSHA = USING_SHA3
+			//case SHA3_BIN_LEN:
+			//	whichSHA = xu.USING_SHA3
 			// XXX otherwise internal error
 		}
 		rest := (*ss)[1:]

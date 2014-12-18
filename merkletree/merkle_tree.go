@@ -8,6 +8,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	xu "github.com/jddixon/xlUtil_go"
 	xf "github.com/jddixon/xlUtil_go/lfs"
 	"hash"
 	"io/ioutil"
@@ -142,13 +143,13 @@ func ParseMerkleTreeFromStrings(ss *[]string) (mt *MerkleTree, err error) {
 	if err == nil {
 		// XXX THIS IS STUPID: SHA2 AND SHA3 HAVE THE SAME LENGTH
 		switch len(treeHash) {
-		case SHA1_LEN:
-			whichSHA = USING_SHA1
-		case SHA2_LEN:
-			whichSHA = USING_SHA2
+		case xu.SHA1_BIN_LEN:
+			whichSHA = xu.USING_SHA1
+		case xu.SHA2_BIN_LEN:
+			whichSHA = xu.USING_SHA2
 			// XXX NOT A VALID CASE
-			//case SHA3_LEN:
-			//	whichSHA = USING_SHA3
+			//case xu.SHA3_BIN_LEN:
+			//	whichSHA = xu.USING_SHA3
 			// DEFAULT IS AN ERROR
 		}
 		mt, err = NewNewMerkleTree(dirName, whichSHA)
@@ -295,11 +296,11 @@ func CreateMerkleTreeFromFileSystem(pathToDir string, whichSHA int,
 		// we are promised that this is sorted
 		files, err = ioutil.ReadDir(pathToDir)
 		switch whichSHA {
-		case USING_SHA1:
+		case xu.USING_SHA1:
 			shaX = sha1.New()
-		case USING_SHA2:
+		case xu.USING_SHA2:
 			shaX = sha256.New()
-		case USING_SHA3:
+		case xu.USING_SHA3:
 			shaX = sha3.NewKeccak256()
 			// XXX DEFAULT = ERROR
 		}
@@ -394,11 +395,11 @@ func (mt *MerkleTree) toStringsNotTop(indent string, ss *[]string) (err error) {
 	topHash := mt.GetHash()
 	if len(topHash) == 0 {
 		switch mt.whichSHA {
-		case USING_SHA1:
+		case xu.USING_SHA1:
 			top = fmt.Sprintf("%s%s %s/", indent, SHA1_NONE, mt.name)
-		case USING_SHA2:
+		case xu.USING_SHA2:
 			top = fmt.Sprintf("%s%s %s/", indent, SHA2_NONE, mt.name)
-		case USING_SHA3:
+		case xu.USING_SHA3:
 			top = fmt.Sprintf("%s%s %s/", indent, SHA3_NONE, mt.name)
 			// XXX DEFAULT = ERROR
 		}
@@ -461,11 +462,11 @@ func (mt *MerkleTree) ToStrings(indent string, ss *[]string) (err error) {
 	topHash := mt.GetHash()
 	if len(topHash) == 0 {
 		switch mt.whichSHA {
-		case USING_SHA1:
+		case xu.USING_SHA1:
 			top = fmt.Sprintf("%s%s %s/", indent, SHA1_NONE, mt.name)
-		case USING_SHA2:
+		case xu.USING_SHA2:
 			top = fmt.Sprintf("%s%s %s/", indent, SHA2_NONE, mt.name)
-		case USING_SHA3:
+		case xu.USING_SHA3:
 			top = fmt.Sprintf("%s%s %s/", indent, SHA3_NONE, mt.name)
 		}
 	} else {

@@ -10,6 +10,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	xr "github.com/jddixon/rnglib_go"
+	xu "github.com/jddixon/xlUtil_go"
 	xf "github.com/jddixon/xlUtil_go/lfs"
 	. "gopkg.in/check.v1"
 	"hash"
@@ -87,11 +88,11 @@ func (s *XLSuite) verifyLeafSHA(c *C, rng *xr.PRNG,
 
 	var sha hash.Hash
 	switch whichSHA {
-	case USING_SHA1:
+	case xu.USING_SHA1:
 		sha = sha1.New()
-	case USING_SHA2:
+	case xu.USING_SHA2:
 		sha = sha256.New()
-	case USING_SHA3:
+	case xu.USING_SHA3:
 		sha = sha3.NewKeccak256()
 		// XXX DEFAULT = ERROR
 	}
@@ -111,11 +112,11 @@ func (s *XLSuite) verifyTreeSHA(c *C, rng *xr.PRNG,
 		hashCount := 0
 		var sha hash.Hash
 		switch whichSHA {
-		case USING_SHA1:
+		case xu.USING_SHA1:
 			sha = sha1.New()
-		case USING_SHA2:
+		case xu.USING_SHA2:
 			sha = sha256.New()
-		case USING_SHA3:
+		case xu.USING_SHA3:
 			sha = sha3.NewKeccak256()
 			// XXX DEFAULT = ERROR
 		}
@@ -147,12 +148,12 @@ func (s *XLSuite) doTestParser(c *C, rng *xr.PRNG, whichSHA int) {
 
 	var tHash []byte
 	switch whichSHA {
-	case USING_SHA1:
-		tHash = make([]byte, SHA1_LEN)
-	case USING_SHA2:
-		tHash = make([]byte, SHA2_LEN)
-	case USING_SHA3:
-		tHash = make([]byte, SHA3_LEN)
+	case xu.USING_SHA1:
+		tHash = make([]byte, xu.SHA1_BIN_LEN)
+	case xu.USING_SHA2:
+		tHash = make([]byte, xu.SHA2_BIN_LEN)
+	case xu.USING_SHA3:
+		tHash = make([]byte, xu.SHA3_BIN_LEN)
 		// XXX DEFAULT = ERROR
 	}
 	rng.NextBytes(tHash)               // not really a hash, of course
@@ -198,9 +199,9 @@ func (s *XLSuite) TestParser(c *C) {
 	}
 	rng := xr.MakeSimpleRNG()
 
-	s.doTestParser(c, rng, USING_SHA1)
-	s.doTestParser(c, rng, USING_SHA2)
-	s.doTestParser(c, rng, USING_SHA3)
+	s.doTestParser(c, rng, xu.USING_SHA1)
+	s.doTestParser(c, rng, xu.USING_SHA2)
+	s.doTestParser(c, rng, xu.USING_SHA3)
 }
 
 // OTHER UNIT TESTS /////////////////////////////////////////////////
@@ -210,10 +211,10 @@ func (s *XLSuite) TestPathlessUnboundConstructor(c *C) {
 		fmt.Println("TEST_PATHLESS_UNBOUND_CONSTRUCTOR")
 	}
 	rng := xr.MakeSimpleRNG()
-	s.doTestPathlessUnboundConstructor(c, rng, USING_SHA1)
-	s.doTestPathlessUnboundConstructor(c, rng, USING_SHA2)
-	// XXX WILL FAIL BECAUSE SHA2_LEN == SHA3_LEN
-	//s.doTestPathlessUnboundConstructor(c, rng, USING_SHA3)
+	s.doTestPathlessUnboundConstructor(c, rng, xu.USING_SHA1)
+	s.doTestPathlessUnboundConstructor(c, rng, xu.USING_SHA2)
+	// XXX WILL FAIL BECAUSE xu.SHA2_BIN_LEN == xu.SHA3_BIN_LEN
+	//s.doTestPathlessUnboundConstructor(c, rng, xu.USING_SHA3)
 }
 
 func (s *XLSuite) doTestPathlessUnboundConstructor(c *C, rng *xr.PRNG,
@@ -232,14 +233,14 @@ func (s *XLSuite) doTestPathlessUnboundConstructor(c *C, rng *xr.PRNG,
 	// as different because one has a hash length of zero and the
 	// other a hash length of 20.
 	var null []byte
-	switch(whichSHA) {
-	case USING_SHA1:
-		null = make([]byte, SHA1_LEN)
-	case USING_SHA2:
-		null = make([]byte, SHA2_LEN)
-	case USING_SHA3:
-		null = make([]byte, SHA3_LEN)
-	// DEFAULF + ERROR
+	switch whichSHA {
+	case xu.USING_SHA1:
+		null = make([]byte, xu.SHA1_BIN_LEN)
+	case xu.USING_SHA2:
+		null = make([]byte, xu.SHA2_BIN_LEN)
+	case xu.USING_SHA3:
+		null = make([]byte, xu.SHA3_BIN_LEN)
+		// DEFAULF + ERROR
 	}
 	tree1.SetHash(null)
 	// END
@@ -288,10 +289,10 @@ func (s *XLSuite) TestBoundFlatDirs(c *C) {
 		fmt.Println("TEST_BOUND_FLAT_DIRS")
 	}
 	rng := xr.MakeSimpleRNG()
-	s.doTestBoundFlatDirs(c, rng, USING_SHA1)
-	s.doTestBoundFlatDirs(c, rng, USING_SHA2)
-	// XXX WILL FAIL BECAUSE SHA2_LEN == SHA3_LEN
-	//s.doTestBoundFlatDirs(c, rng, USING_SHA3)
+	s.doTestBoundFlatDirs(c, rng, xu.USING_SHA1)
+	s.doTestBoundFlatDirs(c, rng, xu.USING_SHA2)
+	// XXX WILL FAIL BECAUSE xu.SHA2_BIN_LEN == xu.SHA3_BIN_LEN
+	//s.doTestBoundFlatDirs(c, rng, xu.USING_SHA3)
 }
 
 func (s *XLSuite) doTestBoundFlatDirs(c *C, rng *xr.PRNG, whichSHA int) {
@@ -340,10 +341,10 @@ func (s *XLSuite) TestBoundNeedleDirs(c *C) {
 		fmt.Println("TEST_BOUND_NEEDLE_DIRS")
 	}
 	rng := xr.MakeSimpleRNG()
-	s.doTestBoundNeedleDirs(c, rng, USING_SHA1)
-	s.doTestBoundNeedleDirs(c, rng, USING_SHA2)
-	// XXX WILL FAIL BECAUSE SHA2_LEN == SHA3_LEN
-	// s.doTestBoundNeedleDirs(c, rng, USING_SHA3)
+	s.doTestBoundNeedleDirs(c, rng, xu.USING_SHA1)
+	s.doTestBoundNeedleDirs(c, rng, xu.USING_SHA2)
+	// XXX WILL FAIL BECAUSE xu.SHA2_BIN_LEN == xu.SHA3_BIN_LEN
+	// s.doTestBoundNeedleDirs(c, rng, xu.USING_SHA3)
 }
 func (s *XLSuite) doTestBoundNeedleDirs(c *C, rng *xr.PRNG, whichSHA int) {
 

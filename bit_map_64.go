@@ -175,4 +175,3 @@ func (bm *BitMap64) Union(other *BitMap64) *BitMap64 {
 	b := bm.Bits | other.Bits
 	return &BitMap64{Bits: b}
 }
-

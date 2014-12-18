@@ -5,6 +5,7 @@ package merkletree
 import (
 	"bytes"
 	"fmt"
+	xu "github.com/jddixon/xlUtil_go"
 )
 
 var _ = fmt.Print
@@ -38,7 +39,7 @@ func NewMerkleNode(name string, hash []byte, whichSHA int) (
 	}
 	if err == nil {
 		length := len(hash)
-		if length != 0 && length != SHA1_LEN && length != SHA3_LEN {
+		if length != 0 && length != xu.SHA1_BIN_LEN && length != xu.SHA2_BIN_LEN && length != xu.SHA3_BIN_LEN {
 			err = InvalidHashLength
 		}
 	}
@@ -94,6 +95,7 @@ func (mn *MerkleNode) Equal(any interface{}) bool {
 	}
 	return true
 }
+
 // SERIALIZATION  for debugging
 func (mn *MerkleNode) ToString(indent string) (s string, err error) {
 	s = fmt.Sprintf("MerkleNode: name %s hash %x sha%d\n",

@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 	xr "github.com/jddixon/rnglib_go"
+	xu "github.com/jddixon/xlUtil_go"
 	. "gopkg.in/check.v1"
 	"io/ioutil"
 	"strings"
@@ -47,17 +48,17 @@ func (s *XLSuite) doTestSHA(c *C, rng *xr.PRNG, whichSHA int) {
 	fileName := parts[1]
 
 	switch whichSHA {
-	case USING_SHA1:
+	case xu.USING_SHA1:
 		sha := sha1.New()
 		sha.Write(data)
 		hash = sha.Sum(nil)
 		fHash, err = SHA1File(pathToFile)
-	case USING_SHA2:
+	case xu.USING_SHA2:
 		sha := sha256.New()
 		sha.Write(data)
 		hash = sha.Sum(nil)
 		fHash, err = SHA2File(pathToFile)
-	case USING_SHA3:
+	case xu.USING_SHA3:
 		sha := sha3.NewKeccak256()
 		sha.Write(data)
 		hash = sha.Sum(nil)
@@ -82,8 +83,8 @@ func (s *XLSuite) TestMerkleLeaf(c *C) {
 		fmt.Println("TEST_MERKLE_LEAF")
 	}
 	rng := xr.MakeSimpleRNG()
-	s.doTestSimpleConstructor(c, rng, USING_SHA1)
-	s.doTestSimpleConstructor(c, rng, USING_SHA2)
-	s.doTestSimpleConstructor(c, rng, USING_SHA3)
+	s.doTestSimpleConstructor(c, rng, xu.USING_SHA1)
+	s.doTestSimpleConstructor(c, rng, xu.USING_SHA2)
+	s.doTestSimpleConstructor(c, rng, xu.USING_SHA3)
 
 }
