@@ -1,8 +1,8 @@
 xlUtil_go/CHANGES
 
 v0.9.0
-    2014-12-17
-        * moving USING_SHA{1,2,3} to xlUtil_go/const.go             SLOC 2612
+    2014-12-18
+        * moving USING_SHA{1,2,3} etc to xlUtil_go/const.go         SLOC 2612
 v0.8.0
     2014-12-17
         * introduce SHA2 = sha256                                   SLOC 2599
