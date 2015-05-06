@@ -1,6 +1,6 @@
 package xlUtil_go
 
 const (
-	VERSION      = "0.8.0"
-	VERSION_DATE = "2014-12-18"
+	VERSION      = "0.9.1"
+	VERSION_DATE = "2015-05-05"
 )

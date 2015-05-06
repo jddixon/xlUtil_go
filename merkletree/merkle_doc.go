@@ -219,17 +219,18 @@ func ParseMerkleDocFirstLine(line string) (
 	return
 }
 
-func ParseMerkleDoc(s string) (md *MerkleDoc, err error) {
+func ParseMerkleDoc(s, deltaIndent string) (md *MerkleDoc, err error) {
 	if len(s) == 0 {
 		err = EmptySerialization
 	} else {
 		ss := strings.Split(s, "\r\n")
-		md, err = ParseMerkleDocFromStrings(&ss)
+		md, err = ParseMerkleDocFromStrings(&ss, deltaIndent)
 	}
 	return
 }
 
-func ParseMerkleDocFromStrings(ss *[]string) (md *MerkleDoc, err error) {
+func ParseMerkleDocFromStrings(ss *[]string, deltaIndent string) (
+	md *MerkleDoc, err error) {
 
 	var (
 		docHash  []byte
@@ -254,7 +255,7 @@ func ParseMerkleDocFromStrings(ss *[]string) (md *MerkleDoc, err error) {
 			// XXX otherwise internal error
 		}
 		rest := (*ss)[1:]
-		tree, err = ParseMerkleTreeFromStrings(&rest)
+		tree, err = ParseMerkleTreeFromStrings(&rest, deltaIndent)
 	}
 	if err == nil {
 		md, err = NewMerkleDoc(path, whichSHA, false, tree, nil, nil)
@@ -337,11 +338,12 @@ func MakeMatchRE(matches []string) (matchRE *re.Regexp, err error) {
 
 // SERIALIZATION ====================================================
 // XXX WHY THE INDENT?
-func (md *MerkleDoc) ToString(indent string) (s string, err error) {
+func (md *MerkleDoc) ToString(indent, deltaIndent string) (
+	s string, err error) {
 
 	hexHash := hex.EncodeToString(md.hash)
 	topLine := fmt.Sprintf("%s%s %s/\r\n", indent, hexHash, md.path)
-	treeText, err := md.tree.ToString("")
+	treeText, err := md.tree.ToString("", deltaIndent)
 	if err == nil {
 		s = topLine + treeText
 	}

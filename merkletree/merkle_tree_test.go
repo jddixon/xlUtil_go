@@ -165,14 +165,14 @@ func (s *XLSuite) doTestParser(c *C, rng *xr.PRNG, whichSHA int) {
 	indent := rng.Intn(4)
 	var lSpaces, rSpaces string
 	for i := 0; i < indent; i++ {
-		lSpaces += "  " // on the left
-		rSpaces += " "  // on the right
+		lSpaces += " " // on the left
+		rSpaces += " " // on the right
 	}
 
 	// TEST FIRST LINE PARSER -----------------------------
 	line := lSpaces + sHash + " " + dirName + rSpaces
 
-	indent2, treeHash2, dirName2, err := ParseFirstLine(line)
+	indent2, treeHash2, dirName2, err := ParseFirstLine(line, " ")
 	c.Assert(err, IsNil)
 	c.Assert(indent2, Equals, indent)
 	c.Assert(bytes.Equal(treeHash2, tHash), Equals, true)
@@ -185,7 +185,7 @@ func (s *XLSuite) doTestParser(c *C, rng *xr.PRNG, whichSHA int) {
 	} else {
 		line = lSpaces + sHash + " " + nameWithoutSlash + rSpaces
 	}
-	nodeDepth, nodeHash, nodeName, isDir, err := ParseOtherLine(line)
+	nodeDepth, nodeHash, nodeName, isDir, err := ParseOtherLine(line, " ")
 	c.Assert(err, IsNil)
 	c.Assert(nodeDepth, Equals, indent)
 	c.Assert(bytes.Equal(nodeHash, tHash), Equals, true)
@@ -254,7 +254,7 @@ func (s *XLSuite) doTestPathlessUnboundConstructor(c *C, rng *xr.PRNG,
 	c.Assert(tree1.Equal(tree1), Equals, true)
 	c.Assert(tree1.Equal(tree2), Equals, false)
 
-	tree1Str, err := tree1.ToString("")
+	tree1Str, err := tree1.ToString("", " ")
 	c.Assert(len(tree1Str) > 0, Equals, true)
 
 	// there should be no indent on the first line
@@ -273,11 +273,11 @@ func (s *XLSuite) doTestPathlessUnboundConstructor(c *C, rng *xr.PRNG,
 	// there should only be a header line
 	c.Assert(len(lines), Equals, 1)
 
-	tree1Rebuilt, err := ParseMerkleTree(tree1Str)
+	tree1Rebuilt, err := ParseMerkleTree(tree1Str, " ")
 	c.Assert(err, IsNil)
 
 	// compare at the string level
-	t1RStr, err := tree1Rebuilt.ToString("")
+	t1RStr, err := tree1Rebuilt.ToString("", " ")
 	c.Assert(err, IsNil)
 	c.Assert(t1RStr, Equals, tree1Str)
 	c.Assert(tree1.Equal(tree1Rebuilt), Equals, true)
@@ -320,15 +320,15 @@ func (s *XLSuite) doTestBoundFlatDirs(c *C, rng *xr.PRNG, whichSHA int) {
 	c.Assert(tree1.Equal(tree2), Equals, false)
 	c.Assert(tree1.Equal(""), Equals, false)
 
-	tree1Str, err := tree1.ToString("")
+	tree1Str, err := tree1.ToString("", " ")
 	c.Assert(err, IsNil)
 	c.Assert(len(tree1Str) > 0, Equals, true)
 
-	tree1Rebuilt, err := ParseMerkleTree(tree1Str)
+	tree1Rebuilt, err := ParseMerkleTree(tree1Str, " ")
 	c.Assert(err, IsNil)
 
 	// compare at the string level
-	t1RStr, err := tree1Rebuilt.ToString("")
+	t1RStr, err := tree1Rebuilt.ToString("", " ")
 	c.Assert(err, IsNil)
 	c.Assert(t1RStr, Equals, tree1Str)
 
@@ -368,11 +368,11 @@ func (s *XLSuite) doTestBoundNeedleDirs(c *C, rng *xr.PRNG, whichSHA int) {
 	c.Assert(len(nodes2), Equals, ONE)
 	s.verifyTreeSHA(c, rng, tree2, dirPath2, whichSHA)
 
-	tree1Str, err := tree1.ToString("")
+	tree1Str, err := tree1.ToString("", " ")
 	c.Assert(err, IsNil)
 	c.Assert(len(tree1Str) > 0, Equals, true)
 
-	tree1Rebuilt, err := ParseMerkleTree(tree1Str)
+	tree1Rebuilt, err := ParseMerkleTree(tree1Str, " ")
 	c.Assert(err, IsNil)
 
 	//       # DEBUG
@@ -403,18 +403,18 @@ func (s *XLSuite) TestGrayBoxesBug(c *C) {
 	ss = ss[:lineCount-1]
 	c.Assert(len(ss), Equals, 4)
 
-	tree2, err := ParseMerkleTreeFromStrings(&ss)
+	tree2, err := ParseMerkleTreeFromStrings(&ss, "  ")
 	c.Assert(err, IsNil)
-	ser2, err := tree2.ToString("")
+	ser2, err := tree2.ToString("", "  ")
 	c.Assert(err, IsNil)
 	c.Assert(ser2, Equals, serialization) // XXX FAILS
 
 	// create from serialization ---------------------------------
-	tree1, err := ParseMerkleTree(serialization)
+	tree1, err := ParseMerkleTree(serialization, "  ")
 	c.Assert(err, IsNil)
 	c.Assert(tree1, NotNil)
 
-	ser1, err := tree1.ToString("")
+	ser1, err := tree1.ToString("", "  ")
 	c.Assert(err, IsNil)
 	c.Assert(ser1, Equals, serialization)
 
@@ -435,7 +435,7 @@ func (s *XLSuite) TestXLatticeBug(c *C) {
 	lines := string(serialization)
 
 	// create from serialization ---------------------------------
-	tree1, err := ParseMerkleTree(lines)
+	tree1, err := ParseMerkleTree(lines, "  ")
 	c.Assert(err, IsNil)
 
 	//       # DEBUG
@@ -444,7 +444,7 @@ func (s *XLSuite) TestXLatticeBug(c *C) {
 	//           t.write( tree1.String() )
 	//       # END
 
-	ser1, err := tree1.ToString("")
+	ser1, err := tree1.ToString("", "  ")
 	c.Assert(err, IsNil)
 	c.Assert(ser1, Equals, lines)
 
@@ -455,10 +455,10 @@ func (s *XLSuite) TestXLatticeBug(c *C) {
 	ss = ss[:lineCount-1]             // so we discard the last
 	c.Assert(len(ss), Equals, 2511)
 
-	tree2, err := ParseMerkleTreeFromStrings(&ss)
+	tree2, err := ParseMerkleTreeFromStrings(&ss, "  ")
 	c.Assert(err, IsNil)
 
-	ser2, err := tree2.ToString("") // no extra indent
+	ser2, err := tree2.ToString("", "  ") // no extra indent
 	c.Assert(err, IsNil)
 	c.Assert(ser2, Equals, lines)
 

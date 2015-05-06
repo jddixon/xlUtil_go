@@ -232,11 +232,11 @@ func (s *XLSuite) doTestMerkleDoc(c *C, rng *xr.PRNG, whichSHA int) {
 
 	c.Assert(expectedDocHash, DeepEquals, actualDocHash)
 
-	doc1Str, err := doc1.ToString("")
+	doc1Str, err := doc1.ToString("", " ")
 	c.Assert(err, IsNil)
 	c.Assert(len(doc1Str) > 0, Equals, true)
 
-	doc1TreeStr, err := doc1.GetTree().ToString("")
+	doc1TreeStr, err := doc1.GetTree().ToString("", " ")
 	c.Assert(err, IsNil)
 	c.Assert(len(doc1TreeStr) > 0, Equals, true)
 
@@ -245,11 +245,11 @@ func (s *XLSuite) doTestMerkleDoc(c *C, rng *xr.PRNG, whichSHA int) {
 	//fmt.Printf("  its tree:\n%s", doc1TreeStr)
 	// END
 
-	doc1Rebuilt, err := ParseMerkleDoc(doc1Str)
+	doc1Rebuilt, err := ParseMerkleDoc(doc1Str, " ")
 	c.Assert(err, IsNil)
 
 	// compare at the string level
-	doc1RStr, err := doc1Rebuilt.ToString("")
+	doc1RStr, err := doc1Rebuilt.ToString("", " ")
 	c.Assert(err, IsNil)
 	// DEBUG
 	//fmt.Printf("DOC2 = doc1RStr:\n%s", doc1RStr)

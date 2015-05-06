@@ -34,7 +34,7 @@ var (
 	showTree      = flag.Bool("m", false, "output the merkletree")
 	showVersion   = flag.Bool("V", false, "output package version info")
 	testing       = flag.Bool("T", false, "test run")
-	usingSHA1     = flag.Bool("1", false, "test run")
+	usingSHA1     = flag.Bool("1", false, "use SHA1 hash in building tree")
 	verbose       = flag.Bool("v", false, "be talkative")
 )
 

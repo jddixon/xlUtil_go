@@ -1,5 +1,13 @@
 // xlattice_go/util/merkletree/TODO
 
+2015-05-05
+    * listings should include empty directories with zero hash
+    * listings should include empty files with zero hash
+    * command line options should match Python merkleize
+    * gMerkleize needs -I/--deltaIndent option
+    * parameterize at least one merkle_tree_test.go with deltaIndent
+        - ie, interate with different values of deltaIndent
+
 2014-12-16
     * introduce constants USING_SHA{1,2,3}                              * DONE
     * replace UsingSHA1() with WhichSHA()

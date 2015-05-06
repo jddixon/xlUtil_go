@@ -1,5 +1,8 @@
 xlUtil_go/CHANGES
 
+v0.9.1
+    2015-05-05
+        * MerkleTree adds deltaIndent property                      SLOC 
 v0.9.0
     2014-12-18
         * moving USING_SHA{1,2,3} etc to xlUtil_go/const.go         SLOC 2612

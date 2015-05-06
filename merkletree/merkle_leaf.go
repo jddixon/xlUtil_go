@@ -75,7 +75,9 @@ func (ml *MerkleLeaf) Equal(any interface{}) bool {
 // Serialize the leaf node, prefixing it with 'indent', which should
 // conventionally be a number of spaces.
 
-func (ml *MerkleLeaf) ToString(indent string) (str string, err error) {
+func (ml *MerkleLeaf) ToString(indent, deltaIndent string) (
+	str string, err error) {
+
 	var shash string
 	hash := ml.hash
 	if len(hash) == 0 {
@@ -95,8 +97,10 @@ func (ml *MerkleLeaf) ToString(indent string) (str string, err error) {
 	return
 }
 
-func (ml *MerkleLeaf) ToStrings(indent string, ss *[]string) (err error) {
-	str, err := ml.ToString(indent)
+func (ml *MerkleLeaf) ToStrings(indent, deltaIndent string, ss *[]string) (
+	err error) {
+
+	str, err := ml.ToString(indent, deltaIndent)
 	if err == nil {
 		*ss = append(*ss, str)
 	}

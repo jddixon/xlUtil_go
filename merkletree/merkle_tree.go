@@ -64,7 +64,7 @@ func (mt *MerkleTree) addNode(node MerkleNodeI) (err error) {
 	}
 	return
 }
-func ParseFirstLine(line string) (
+func ParseFirstLine(line, deltaIndent string) (
 	indent int, treeHash []byte, dirName string, err error) {
 
 	line = strings.TrimRight(line, " \t")
@@ -80,14 +80,14 @@ func ParseFirstLine(line string) (
 		treeHash, err = hex.DecodeString(groups[2])
 	}
 	if err == nil {
-		indent = len(groups[1]) / 2
+		indent = len(groups[1]) / len(deltaIndent)
 		dirName = groups[3]
 		dirName = dirName[0 : len(dirName)-1] // drop terminating slash
 	}
 	return
 }
 
-func ParseOtherLine(line string) (
+func ParseOtherLine(line, deltaIndent string) (
 	nodeDepth int, nodeHash []byte, nodeName string, isDir bool, err error) {
 
 	line = strings.TrimRight(line, " \t")
@@ -103,7 +103,7 @@ func ParseOtherLine(line string) (
 		nodeHash, err = hex.DecodeString(groups[2])
 	}
 	if err == nil {
-		nodeDepth = len(groups[1]) / 2
+		nodeDepth = len(groups[1]) / len(deltaIndent)
 		nodeName = groups[3]
 		if strings.HasSuffix(nodeName, "/") {
 			isDir = true
@@ -115,9 +115,10 @@ func ParseOtherLine(line string) (
 
 // The string array is expected to follow conventional indentation
 // rules, with zero indentation on the first line and some multiple
-// of two spaces on all successive lines.
+// of deltaIndent spaces on all successive lines.
 
-func ParseMerkleTreeFromStrings(ss *[]string) (mt *MerkleTree, err error) {
+func ParseMerkleTreeFromStrings(ss *[]string, deltaIndent string) (
+	mt *MerkleTree, err error) {
 
 	var (
 		indent   int
@@ -135,7 +136,7 @@ func ParseMerkleTreeFromStrings(ss *[]string) (mt *MerkleTree, err error) {
 	if err == nil {
 		firstLine := (*ss)[0]
 		firstLine = strings.TrimRight(firstLine, " \t")
-		indent, treeHash, dirName, err = ParseFirstLine(firstLine)
+		indent, treeHash, dirName, err = ParseFirstLine(firstLine, deltaIndent)
 		if err == nil && indent > 0 {
 			err = InitialIndent
 		}
@@ -175,7 +176,7 @@ func ParseMerkleTreeFromStrings(ss *[]string) (mt *MerkleTree, err error) {
 			continue
 		}
 		// Note the hash may not be of the expected type.
-		lineIndent, thisHash, name, isDir, err := ParseOtherLine(line)
+		lineIndent, thisHash, name, isDir, err := ParseOtherLine(line, deltaIndent)
 		if err != nil {
 			break
 		}
@@ -218,13 +219,13 @@ func ParseMerkleTreeFromStrings(ss *[]string) (mt *MerkleTree, err error) {
 	return
 }
 
-func ParseMerkleTree(s string) (mt *MerkleTree, err error) {
+func ParseMerkleTree(s, deltaIndent string) (mt *MerkleTree, err error) {
 
 	if s == "" {
 		err = EmptySerialization
 	} else {
 		ss := strings.Split(s, "\r\n")
-		mt, err = ParseMerkleTreeFromStrings(&ss)
+		mt, err = ParseMerkleTreeFromStrings(&ss, deltaIndent)
 	}
 	return
 }
@@ -378,9 +379,11 @@ func (mt *MerkleTree) AddNode(mn MerkleNodeI) (err error) {
 // Called ToString because it returns an error.  XXX Consider dropping
 // the indent argument.
 
-func (mt *MerkleTree) ToString(indent string) (str string, err error) {
+func (mt *MerkleTree) ToString(indent, deltaIndent string) (
+	str string, err error) {
+
 	var ss []string
-	err = mt.ToStrings(indent, &ss) // top level indent
+	err = mt.ToStrings(indent, deltaIndent, &ss) // top level indent
 	if err == nil {
 		str = strings.Join(ss, "\r\n")
 		str += "\r\n"
@@ -389,7 +392,8 @@ func (mt *MerkleTree) ToString(indent string) (str string, err error) {
 }
 
 // Serialize a MerkleTree node recursively.
-func (mt *MerkleTree) toStringsNotTop(indent string, ss *[]string) (err error) {
+func (mt *MerkleTree) toStringsNotTop(
+	indent, deltaIndent string, ss *[]string) (err error) {
 
 	var top string
 	topHash := mt.GetHash()
@@ -410,15 +414,15 @@ func (mt *MerkleTree) toStringsNotTop(indent string, ss *[]string) (err error) {
 	}
 	*ss = append(*ss, top)
 	// WORKING HERE - THIS JUST COPIED FROM ToStrings:
-	myIndent := indent + "  "
+	myIndent := indent + deltaIndent
 	for i := 0; i < len(mt.nodes); i++ {
 		node := mt.nodes[i]
 		if node.IsLeaf() {
 			mLeaf := node.(*MerkleLeaf)
-			err = mLeaf.ToStrings(myIndent, ss)
+			err = mLeaf.ToStrings(myIndent, deltaIndent, ss)
 		} else {
 			mTree := node.(*MerkleTree)
-			err = mTree.toStringsNotTop(myIndent, ss) // recurses
+			err = mTree.toStringsNotTop(myIndent, deltaIndent, ss) // recurses
 		}
 		if err != nil {
 			break
@@ -456,7 +460,8 @@ func (mt *MerkleTree) toStringsNotTop(indent string, ss *[]string) (err error) {
 //        Using code should take into account that the last line is CR-LF
 //        terminated, and so a split on CRLF will generate an extra blank line
 
-func (mt *MerkleTree) ToStrings(indent string, ss *[]string) (err error) {
+func (mt *MerkleTree) ToStrings(indent, deltaIndent string, ss *[]string) (
+	err error) {
 
 	var top string
 	topHash := mt.GetHash()
@@ -475,15 +480,15 @@ func (mt *MerkleTree) ToStrings(indent string, ss *[]string) (err error) {
 			mt.name) // <--- LEVEL 0 NODE
 	}
 	*ss = append(*ss, top)
-	myIndent := indent + "  "
+	myIndent := indent + deltaIndent
 	for i := 0; i < len(mt.nodes); i++ {
 		node := mt.nodes[i]
 		if node.IsLeaf() {
 			mLeaf := node.(*MerkleLeaf)
-			err = mLeaf.ToStrings(myIndent, ss)
+			err = mLeaf.ToStrings(myIndent, deltaIndent, ss)
 		} else {
 			mTree := node.(*MerkleTree)
-			err = mTree.toStringsNotTop(myIndent, ss) // recurses
+			err = mTree.toStringsNotTop(myIndent, deltaIndent, ss) // recurses
 		}
 		if err != nil {
 			break
