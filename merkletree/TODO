@@ -1,5 +1,8 @@
 // xlattice_go/util/merkletree/TODO
 
+2015-06-08
+    * gMerkleize around line 144 sets deltaIndent to "  " arbitrarily
+
 2015-05-05
     * listings should include empty directories with zero hash
     * listings should include empty files with zero hash
