@@ -1,5 +1,10 @@
 xlUtil_go/CHANGES
 
+v0.9.2
+    2015-06-08                                                  
+        * add SHA{1,2,3}_BIN_NONE                                   SLOC 3417
+        * fixed bug in gMerkleize                                   SLOC 3424
+        * roughed out nlhTree                                       SLOC 3524
 v0.9.1
     2015-05-05
         * MerkleTree adds deltaIndent property                      SLOC 

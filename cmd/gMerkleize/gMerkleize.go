@@ -1,13 +1,14 @@
 package main
 
-// xlattice_go/cmd/gMerkleize/gMerkleize.go
+// xlUtil_go/cmd/gMerkleize/gMerkleize.go
 
 import (
 	"encoding/hex"
 	"errors"
 	"flag"
 	"fmt"
-	xm "github.com/jddixon/xlattice_go/util/merkletree"
+	xu "github.com/jddixon/xlUtil_go"
+	xm "github.com/jddixon/xlUtil_go/merkletree"
 	"io/ioutil"
 	"os"
 	"path"
@@ -126,14 +127,22 @@ func main() {
 		var (
 			doc *xm.MerkleDoc
 			ss  []string
+			whichSHA int
 		)
 		fullPath := path.Join(inPath, dirName)
-		doc, err = xm.CreateMerkleDocFromFileSystem(fullPath, *usingSHA1,
+		if *usingSHA1 {
+			whichSHA = xu.USING_SHA1
+		} else {
+			whichSHA = xu.USING_SHA2
+		}
+		doc, err = xm.CreateMerkleDocFromFileSystem(fullPath, whichSHA,
 			excludePats, matchPats)
 		if err == nil {
 			tree := doc.GetTree()
 			if *showTree {
-				tree.ToStrings("", &ss)
+				// XXX err not handled
+				// XXX deltaIndent arbitrarily set to two spaces
+				err = tree.ToStrings("", "  ", &ss)
 			}
 			if *hashOutput {
 				treeHashAsHex := hex.EncodeToString(tree.GetHash())

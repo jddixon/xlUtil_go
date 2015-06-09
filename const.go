@@ -32,3 +32,8 @@ const (
 	// XXX STUB
 
 )
+var (
+	SHA1_BIN_NONE	= make([]byte, SHA1_BIN_LEN)
+	SHA2_BIN_NONE	= make([]byte, SHA2_BIN_LEN)
+	SHA3_BIN_NONE	= make([]byte, SHA3_BIN_LEN)
+)
