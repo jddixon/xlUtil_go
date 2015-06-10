@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
+	xu "github.com/jddixon/xlU_go"
 	"os"
 )
 
@@ -61,7 +62,7 @@ func (nl *NLHLeaf) Equal(any interface{}) bool {
 	return true
 }
 
-func (nl *NLHLeaf) ToString(indent int) {
+func (nl *NLHLeaf) ToString(indent int) string {
 	return fmt.Sprintf("%s%s %s",
 		GetSpaces(indent),
 		nl.Name(),
@@ -79,12 +80,15 @@ func CreateNLHLeafFromFileSystem(path, name string, usingSHA1 bool) (
 		if info.IsDir() {
 			err = IsDirectory
 		} else {
+			var binHash []byte
 			if usingSHA1 {
-				hash = fileBinSHA1(path)
+				binHash, err = xu.FileBinSHA1(path)
 			} else {
-				hash = fileBinSHA2(path)
+				binHash, err = xu.FileBinSHA2(path)
 			}
-			nl, err = NewNLHLeaf(name, hash)
+			if err == nil {
+				nl, err = NewNLHLeaf(name, binHash)
+			}
 		}
 	}
 	return

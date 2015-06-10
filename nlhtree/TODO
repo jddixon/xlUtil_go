@@ -1,0 +1,2 @@
+2015-06-09
+    * any use of NextBytes after SomeBytes is superfluous
