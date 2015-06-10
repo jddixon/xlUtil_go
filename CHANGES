@@ -1,5 +1,8 @@
 xlUtil_go/CHANGES
 
+v0.9.4
+    2015-06-10
+        * third NLHTree test translated                             SLOC 3611
 v0.9.3
     2015-06-09
         * nlhTree done, 2/3 tests translated                        SLOC 3476
