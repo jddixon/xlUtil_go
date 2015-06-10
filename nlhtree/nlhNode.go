@@ -57,13 +57,13 @@ func GetSpaces(n int) string {
 		n = 0
 	}
 	// cache strings of N spaces
-	k = len(NLHNode.__SPACES__) - 1
+	k := len(__SPACES__) - 1
 	for k < n {
 		k++
 		if k == 0 {
-			append(__SPACES__, "")
+			__SPACES__ = append(__SPACES__, "")
 		} else {
-			append(__SPACES__, __SPACES__[k-1]+" ")
+			__SPACES__ = append(__SPACES__, __SPACES__[k-1]+" ")
 		}
 	}
 	return __SPACES__[n]

@@ -16,16 +16,14 @@ type NLHBase struct {
 	usingSHA1 bool
 }
 
-func NewNLHBase(name string, usingSHA1 bool) (nb *NLHBase, err error) {
-	root, err := NewNLHTree(name, usingSHA1)
-	if err == nil {
-		nb = &NLHBase{
-			name:      name,
-			root:      root,
-			usingSHA1: usingSHA1,
-		}
-		nb.curTree = nb.root
+func NewNLHBase(name string, usingSHA1 bool) (nb *NLHBase) {
+	root := NewNLHTree(name, usingSHA1)
+	nb = &NLHBase{
+		name:      name,
+		root:      root,
+		usingSHA1: usingSHA1,
 	}
+	nb.curTree = nb.root
 	return
 }
 
