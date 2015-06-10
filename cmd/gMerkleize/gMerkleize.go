@@ -125,8 +125,8 @@ func main() {
 	// DO IT ////////////////////////////////////////////////////////
 	if err == nil && !*justShow {
 		var (
-			doc *xm.MerkleDoc
-			ss  []string
+			doc      *xm.MerkleDoc
+			ss       []string
 			whichSHA int
 		)
 		fullPath := path.Join(inPath, dirName)
