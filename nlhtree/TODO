@@ -1,2 +1,8 @@
+xlUtil_go/nlhtree/TODO
+
+2015-06-10
+    * nlhBase is the merest sketch
+        - needs specs
+        - then code it up
 2015-06-09
-    * any use of NextBytes after SomeBytes is superfluous
+    * any use of NextBytes after SomeBytes is superfluous               * FIXED
