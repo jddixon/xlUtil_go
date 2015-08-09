@@ -1,2 +1,11 @@
-2015-06-09
-    * any use of NextBytes after SomeBytes is superfluous
+xlUtil_go/nlhtree/TODO
+
+2015-07-09
+    * compare functionality/API of Go and Python, specifically
+        for NLHBase
+
+2015-07-09 (edited from 06-10)
+    DOES THIS MAKE SENSE?
+    * nlhBase is the merest sketch
+        - needs specs
+        - then code it up

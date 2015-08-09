@@ -24,7 +24,6 @@ func doTestSimpleConstructor(c *C, rng *xr.PRNG, usingSHA1 bool) {
 
 	name := rng.NextFileName(8)
 	n := rng.SomeBytes(8)
-	rng.NextBytes(n)
 	sha.Write(n)
 	hash0 := sha.Sum(nil)
 
@@ -38,7 +37,6 @@ func doTestSimpleConstructor(c *C, rng *xr.PRNG, usingSHA1 bool) {
 		name2 = rng.NextFileName(8)
 	}
 	n = rng.SomeBytes(8)
-	rng.NextBytes(n)
 	sha.Write(n)
 	hash1 := sha.Sum(nil)
 	leaf1, err := NewNLHLeaf(name2, hash1)
