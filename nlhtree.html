@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>nlhtree</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" type="text/css" href="css/main.css" />
+  <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+  <link rel="stylesheet" type="text/css" href="css/ghp.css" />
+</head>
+<body>
+<div class="content">
+<h1>nlhtree</h1>
+
+<h2>Tree</h2>
+
+<p>An <strong>NLHTree</strong> is a data structure in which each node consists of a pair:
+a name and either a list of such pairs or a hash.  The NLHTree is serialized
+as an indented list, with each immediate child indented one space more than
+the parent</p>
+
+<h2>Hash</h2>
+
+<p>All of the hashes
+in the tree have the same number of bits, either 160 (for an SHA1 hash)
+or 256 (for an SHA2 or SHA3 hash).</p>
+
+<h2>Node Names</h2>
+
+<p>All names in the tree must be valid file names.  For the moment, this
+will be understood to include letters, both upper and lower case,
+digits, the dash (&lsquo;-&rsquo;), and the underscore (&rsquo;_&lsquo;).  Node names may not
+include either spaces or line breaks (CR=13 and LF=10).</p>
+
+<h2>Top</h2>
+
+<p>The topmost node in the tree is a pair of the first type and belongs to the
+<strong>NLHTree</strong> class.  It consists of a name and a list of <strong>NLHNodes</strong>, where an
+NLHNode is either an NLHTree or an <strong>NLFLeaf</strong>.  At each level the list of
+nodes is sorted by name.</p>
+
+<h2>Intermediate Nodes</h2>
+
+<p>All intermediate nodes in the tree are also instances of the NLHTree
+class and so consist of a name and a (possibly empty) sorted list.</p>
+
+<h2>Leaf Nodes</h2>
+
+<p>Leaf nodes in the tree, instances of the <strong>NLHLeaf</strong> class, consist of a valid
+name and a hash.  Once formed an NLHLeaf is immutable in the sense that
+its fields (its name and its hash) cannot be changed.  If the leaf node is
+in an NLHTree, the tree has a reference to
+it.</p>
+
+<h2>Example</h2>
+
+<pre><code>dataDir
+ data1 bea7383743859a81b84cec8fde2ccd1f3e2ff688
+ data2 895c210f5203c48c1e3a574a2d5eba043c0ec72d
+ subDir1
+  data11 cb0ece05cbb91501d3dd78afaf362e63816f6757
+  data12 da39a3ee5e6b4b0d3255bfef95601890afd80709
+ subDir2
+ subDir3
+  data31 8cddeb23f9de9da4547a0d5adcecc7e26cb098c0
+ subDir4
+  subDir41
+   subDir411
+    data41 31c16def9fc4a4b6415b0b133e156a919cf41cc8
+ zData 31c16def9fc4a4b6415b0b133e156a919cf41cc8
+</code></pre>
+
+<p>In this example, the NLHTree represents the files in the directory <code>dataDir</code>.
+The directory contains three files (<code>data1</code>, <code>data2</code>, and <code>zData</code> and four
+subdirectories (<code>subDir1</code>, <code>subDir2</code> (which is empty), <code>subDir3</code>, and
+<code>subDir4</code>.  The name of each of the leaf nodes (files) is followed by its
+content hash.  In this case these are SHA1 hashes, which are 20 bytes long,
+and so written as 40 hex digits.</p>
+
+<h2>Utility</h2>
+
+<p>NLHTrees are useful as concise descriptions of file systems.  In particular
+they are used in building and editing
+<a href="https://jddixon.github.io/buildList">BuildLists.</a></p>
+
+<p>A BuildList contains a recursive data structure, its NLHTree.  Each leaf
+node has associated with it a content hash which can be used to verify the
+integrity of the file.  The BuildList has an associated RSA public key,
+title and date and can be signed using the signatory&rsquo;s private RSA key.
+The presence of the RSA public key makes it possible for anyone obtaining
+a copy of the BuildList to verify that the list is a true representation
+of the BuildList.</p>
+
+<h2>Package Status</h2>
+
+<p>A good beta.  All tests succeed.</p>
+  <div class="f">
+    <hr />
+    <div class="license">
+      <p><a href="LICENSE.html">SOFTWARE LICENSE</a></p>
+    </div>
+    <div class="project">
+      github <a href="https://github.com/jddixon/nlhtree">      <img src="img/GitHub-Mark-32px.png" 
+        alt="link to project"  
+        style="display: inline-block; margin-left: 0 auto; margin-right: 0 auto">
+       </a> project
+    </div>
+    <div class="logo" >
+      <a href="http://www.xlattice.org">
+      <img src="img/xlattice-2014.jpg" alt="the XLattice Project" style="float: right;" >
+      </a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

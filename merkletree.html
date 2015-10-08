@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>merkletree</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" type="text/css" href="css/main.css" />
+  <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+  <link rel="stylesheet" type="text/css" href="css/ghp.css" />
+</head>
+<body>
+<div class="content">
+<h1>merkletree</h1>
+
+<h2>What It Does</h2>
+
+<p><strong>merkletree</strong> is a Go package for creating a
+<a href="https://en.wikipedia.org/wiki/Merkle_tree">Merkle tree</a>
+for a
+directory structure.  A <strong>Merkle tree</strong> is a representation of the contents
+of the directory and its subdirectories in terms of hashes.</p>
+
+<p>A file is represented by the hash of its
+contents.  A directory is represented by the hash of the hashes
+of its members, sorted.  This makes it very easy to verify the
+contents of a directory:</p>
+
+<pre><code>gMerkleize -x -i  .
+</code></pre>
+
+<p>outputs a single hash, a hexadecimal number.  If any file in the
+directory structure has been changed, the output from the above
+command will also change.</p>
+
+<h2>SHA, the Secure Hash Algorithm</h2>
+
+<p>This package uses hash algorithms specified in the
+<a href="http://nvfpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf">Secure Hash Standard</a>
+for hashing.  This is a standard published by the US National Institute of
+Standards and Techology (<strong>NIST</strong>).</p>
+
+<p>SHA is a cryptographically secure hash, meaning that for all
+practical purposes it is impossible to find two documents with the same hash.
+In other words, the SHA hashes are meant to be <strong>one-way</strong>: given a document,
+it is very easy to determine its SHA hash, but given such a hash the only
+practical way to find out what document it corresponds to is to hash all
+candidate matches and compare the resultant hash with the one you are searching
+for.</p>
+
+<p><strong>merkletree</strong> currently uses</p>
+
+<ul>
+<li>either the older 160 bit/20 byte <strong>SHA1</strong> (aka SHA-1)</li>
+<li>or the more recent and supposedly more secure <strong>SHA2</strong> (aka SHA-256),
+a 256 bit/32 byte hash</li>
+<li>or <strong>SHA3</strong>, the 256-bit/32-byte version of
+<a href="https://en.wikipedia.org/wiki/SHA-3">Keccak</a>, the winner of the 2012
+NIST competition in search of a more secure version of SHA</li>
+</ul>
+
+<h2>What It&rsquo;s Used For</h2>
+
+<p>Verifying the integrity of file systems, of directory structures.</p>
+
+<h2>Command Line</h2>
+
+<pre><code>usage: gMerkleize [options]
+where the options are
+  -h, --help           to see this very useful message
+  -1, --usingSHA1      use SHA-1 hash instead of default SHA-256
+  -d  --outDir DIR     write serialized merkletree here
+  -i, --inDir DIR      where DIR names directory being scanned
+  -j, --justShow       list options and exit
+  -m  --showTree       output the merkletree hash/filename pairs
+  -o, --outFile NAME   write output to this file name
+  -P, --match PAT      include ONLY files with matching names
+  -t, --showTimestamp  output UTC timestamp to command line
+  -v, --verbose        verbose: whether the program is chatty
+  -V, --version        show version information
+  -x, --hashOutput     whether to output the top level hash
+  -X, --exclude PAT    don't include files with matching names
+</code></pre>
+
+<p>The default output file name is the UTC timestamp.</p>
+
+<p><strong>WARNING:</strong> the command line description above may not be current: type</p>
+
+<pre><code>gMerkleize -h
+</code></pre>
+
+<p>to confirm the syntax for your release.</p>
+
+<h2>Relationships</h2>
+
+<p>Merkletree was implemented as part of the
+<a href="http://www.xlattice.org">XLattice</a>
+project.  A Python implementation is available; see
+<a href="https://gibhub.com/jddixon/merkletree">merkletree</a>.</p>
+
+<h2>Project Status</h2>
+
+<p>The library code is well-tested and reliable.  The command line is being
+brought into conformance with the Java and Python versions and may change
+shortly.</p>
+
+<h2>On-line Documentation</h2>
+
+<p>More information on the <strong>merkletree</strong> project can be found
+<a href="https://jddixon.github.io/merkletree">here</a></p>
+  <div class="f">
+    <hr />
+    <div class="license">
+      <p><a href="LICENSE.html">SOFTWARE LICENSE</a></p>
+    </div>
+    <div class="project">
+      github <a href="https://github.com/jddixon/merkletree">      <img src="img/GitHub-Mark-32px.png" 
+        alt="link to project"  
+        style="display: inline-block; margin-left: 0 auto; margin-right: 0 auto">
+       </a> project
+    </div>
+    <div class="logo" >
+      <a href="http://www.xlattice.org">
+      <img src="img/xlattice-2014.jpg" alt="the XLattice Project" style="float: right;" >
+      </a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
