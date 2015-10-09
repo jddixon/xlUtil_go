@@ -1,5 +1,10 @@
 xl_util/TODO
 
+2015-10-08
+    * verify that the command line documented is that actually used
+        by gMerkleize
+    * modify as required so that insofar as possible the Java, Pyuthon,
+        `and Go command line syntax are the same
 2014-12-17
     * introduce file format changes (possibly SHA name at end of 
         first line in file) to make distinguishing SHA2 from SHA3 

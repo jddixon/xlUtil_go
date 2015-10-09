@@ -1,5 +1,8 @@
 xlUtil_go/CHANGES
 
+v0.9.7
+    2015-10-08
+        * added some documentation                                  SLOC 3609
 v0.9.6
     2015-08-09
         * minor cleanup: copyright, TODO, etc                       SLOC 3609
