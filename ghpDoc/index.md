@@ -1,6 +1,6 @@
 <h1 class="libTop">xlUtil_go</h1>
 
-Utilities useful or necessary for the 
+Utilities useful or necessary for the
 [xlattice_go](https://jddixon.github.iio/xlattice_go)
 project.  These currently include
 
@@ -13,17 +13,17 @@ project.  These currently include
   next power of 2
 * **MerkleTree**, a standard way of representing a directory structure
   in terms of file names and content hashes
-* **NLHTree**, a somewhat simpler way of representing directory structures 
+* **NLHTree**, a somewhat simpler way of representing directory structures
   and files
 * **popCount**, 32- and 64-bit versions of the SWAR algorithm used for
   counting the number of bits set in a machine word
-* **TimeStamp**, the XLattice standard form for a timestamp 
+* **TimeStamp**, the XLattice standard form for a timestamp
 
 ## BitMap64
 
 As the term is used here, a `bitmap` is an array of bits, specifically
 a 64-bit word, where the bit being set (having a value of 1) means that
-something of interest is present whereas the bit being clear (having a 
+something of interest is present whereas the bit being clear (having a
 value of 0) means that it is absent.
 
 	type BitMap64 struct {
@@ -98,7 +98,7 @@ string serialization used by XLattice for version numbers.
 
 	type DecimalVersion uint32
 	
-	func New(a, b, c, d uint) (dv DecimalVersion) 
+	func New(a, b, c, d uint) (dv DecimalVersion)
 	
 	// Interpret a byte slice as a big-endian uint.
 	func VersionFromBytes(b []byte) (dv DecimalVersion, err error)
@@ -108,7 +108,7 @@ string serialization used by XLattice for version numbers.
 	
 	// Convert a string like a.b.c.d back to a uint32 DecimalVersion.  At
 	// least one digit must be present.
-	func ParseDecimalVersion(s string) (dv DecimalVersion, err error) 
+	func ParseDecimalVersion(s string) (dv DecimalVersion, err error)
 
 ## EntityName
 
@@ -130,44 +130,44 @@ Convenience functions for dealing with the local file system.
 	//
 	// If the directory named exists, permissions are not inspected.
 	
-	func CheckLFS(lfs string, perm os.FileMode) (err error) 
+	func CheckLFS(lfs string, perm os.FileMode) (err error)
 	
 	// Given a path to a file, create any missing intermediate directories.
-	func MkdirsToFile(pathToFile string, perm os.FileMode) (err error) 
+	func MkdirsToFile(pathToFile string, perm os.FileMode) (err error)
 ## Math
 
 	// Return the smallest non-negative integer exp where 2^exp is
 	// greater than or equal to n.
-	func NextExp2_32(n uint32) (exp int) 
+	func NextExp2_32(n uint32) (exp int)
 	
 	// Return the smallest non-negative integer exp where 2^exp is
 	// greater than or equal to n.
-	func NextExp2_64(n uint64) (exp int) 
+	func NextExp2_64(n uint64) (exp int)
 	
 	// Return the smallest 32-bit number k which is a power of two and greater
 	// than // or equal to n.
-	func NextPow2_32(n uint32) (k uint32) 
+	func NextPow2_32(n uint32) (k uint32)
 	
 	// Return the smallest 64-bit number k which is a power of two and greater
 	// than or equal to n.
-	func NextPow2_64(n uint64) (k uint64) 
+	func NextPow2_64(n uint64) (k uint64)
 
 ### MerkleTree
 
-For further information on this package click 
+For further information on this package click
 [here](https://jddixon.github.io/xlUtil_go/merkletree.html)
 
 ### NLHTree
 
-For further information on this package click 
+For further information on this package click
 [here](https://jddixon.github.io/xlUtil_go/nlhtree.html)
 
 ### popCount
 
 This is an implementation in software of `popCount` (also called `CTPOP`)
 which on more
-modern machine architectures is a machine instruction for counting 
-the number of bits set in a word.   
+modern machine architectures is a machine instruction for counting
+the number of bits set in a word.
 
 ### Timestamp
 
@@ -176,9 +176,9 @@ the number of bits set in a word.
 	 */
 	type Timestamp int64
 	
-	func (t Timestamp) String() (x string) 
+	func (t Timestamp) String() (x string)
 	
-	func ParseTimestamp(s string) (t Timestamp, err error) 
+	func ParseTimestamp(s string) (t Timestamp, err error)
 
 ## Project Status
 
