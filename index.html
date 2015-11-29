@@ -112,7 +112,7 @@ string serialization used by XLattice for version numbers.</p>
 
 <pre><code>type DecimalVersion uint32
 
-func New(a, b, c, d uint) (dv DecimalVersion) 
+func New(a, b, c, d uint) (dv DecimalVersion)
 
 // Interpret a byte slice as a big-endian uint.
 func VersionFromBytes(b []byte) (dv DecimalVersion, err error)
@@ -122,7 +122,7 @@ func (dv DecimalVersion) String() (s string)
 
 // Convert a string like a.b.c.d back to a uint32 DecimalVersion.  At
 // least one digit must be present.
-func ParseDecimalVersion(s string) (dv DecimalVersion, err error) 
+func ParseDecimalVersion(s string) (dv DecimalVersion, err error)
 </code></pre>
 
 <h2>EntityName</h2>
@@ -146,29 +146,29 @@ func INVALID_NAME() error
 //
 // If the directory named exists, permissions are not inspected.
 
-func CheckLFS(lfs string, perm os.FileMode) (err error) 
+func CheckLFS(lfs string, perm os.FileMode) (err error)
 
 // Given a path to a file, create any missing intermediate directories.
-func MkdirsToFile(pathToFile string, perm os.FileMode) (err error) 
+func MkdirsToFile(pathToFile string, perm os.FileMode) (err error)
 </code></pre>
 
 <h2>Math</h2>
 
 <pre><code>// Return the smallest non-negative integer exp where 2^exp is
 // greater than or equal to n.
-func NextExp2_32(n uint32) (exp int) 
+func NextExp2_32(n uint32) (exp int)
 
 // Return the smallest non-negative integer exp where 2^exp is
 // greater than or equal to n.
-func NextExp2_64(n uint64) (exp int) 
+func NextExp2_64(n uint64) (exp int)
 
 // Return the smallest 32-bit number k which is a power of two and greater
 // than // or equal to n.
-func NextPow2_32(n uint32) (k uint32) 
+func NextPow2_32(n uint32) (k uint32)
 
 // Return the smallest 64-bit number k which is a power of two and greater
 // than or equal to n.
-func NextPow2_64(n uint64) (k uint64) 
+func NextPow2_64(n uint64) (k uint64)
 </code></pre>
 
 <h3>MerkleTree</h3>
@@ -195,9 +195,9 @@ the number of bits set in a word.</p>
  */
 type Timestamp int64
 
-func (t Timestamp) String() (x string) 
+func (t Timestamp) String() (x string)
 
-func ParseTimestamp(s string) (t Timestamp, err error) 
+func ParseTimestamp(s string) (t Timestamp, err error)
 </code></pre>
 
 <h2>Project Status</h2>
@@ -219,7 +219,7 @@ Follow the SOFTWARE LICENSE link below for more information on project software 
        </a> project
     </div>
     <div class="logo" >
-      <a href="http://www.xlattice.org">
+      <a href="https://jddixon.github.io/xlattice/">
       <img src="img/xlattice-2014.jpg" alt="the XLattice Project" style="float: right;" >
       </a>
     </div>
