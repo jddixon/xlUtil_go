@@ -16,29 +16,29 @@ or 256 (for an SHA2 or SHA3 hash).
 ## Node Names
 
 All names in the tree must be valid file names.  For the moment, this
-will be understood to include letters, both upper and lower case, 
-digits, the dash ('-'), and the underscore ('_').  Node names may not 
-include either spaces or line breaks (CR=13 and LF=10).  
+will be understood to include letters, both upper and lower case,
+digits, the dash ('-'), and the underscore ('_').  Node names may not
+include either spaces or line breaks (CR=13 and LF=10).
 
 ## Top
 
 The topmost node in the tree is a pair of the first type and belongs to the
 **NLHTree** class.  It consists of a name and a list of **NLHNodes**, where an
-NLHNode is either an NLHTree or an **NLFLeaf**.  At each level the list of 
+NLHNode is either an NLHTree or an **NLFLeaf**.  At each level the list of
 nodes is sorted by name.
 
 ## Intermediate Nodes
 
-All intermediate nodes in the tree are also instances of the NLHTree 
+All intermediate nodes in the tree are also instances of the NLHTree
 class and so consist of a name and a (possibly empty) sorted list.
 
 ## Leaf Nodes
 
-Leaf nodes in the tree, instances of the **NLHLeaf** class, consist of a valid 
-name and a hash.  Once formed an NLHLeaf is immutable in the sense that 
-its fields (its name and its hash) cannot be changed.  If the leaf node is 
-in an NLHTree, the tree has a reference to 
-it. 
+Leaf nodes in the tree, instances of the **NLHLeaf** class, consist of a valid
+name and a hash.  Once formed an NLHLeaf is immutable in the sense that
+its fields (its name and its hash) cannot be changed.  If the leaf node is
+in an NLHTree, the tree has a reference to
+it.
 
 ## Example
 
@@ -59,7 +59,7 @@ it.
 
 In this example, the NLHTree represents the files in the directory `dataDir`.
 The directory contains three files (`data1`, `data2`, and `zData` and four
-subdirectories (`subDir1`, `subDir2` (which is empty), `subDir3`, and 
+subdirectories (`subDir1`, `subDir2` (which is empty), `subDir3`, and
 `subDir4`.  The name of each of the leaf nodes (files) is followed by its
 content hash.  In this case these are SHA1 hashes, which are 20 bytes long,
 and so written as 40 hex digits.
@@ -67,10 +67,10 @@ and so written as 40 hex digits.
 ## Utility
 
 NLHTrees are useful as concise descriptions of file systems.  In particular
-they are used in building and editing 
+they are used in building and editing
 [BuildLists.](https://jddixon.github.io/buildList)
 
-A BuildList contains a recursive data structure, its NLHTree.  Each leaf 
+A BuildList contains a recursive data structure, its NLHTree.  Each leaf
 node has associated with it a content hash which can be used to verify the
 integrity of the file.  The BuildList has an associated RSA public key,
 title and date and can be signed using the signatory's private RSA key.

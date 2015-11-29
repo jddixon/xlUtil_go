@@ -3,13 +3,13 @@
 
 ## What It Does
 
-**merkletree** is a Go package for creating a 
+**merkletree** is a Go package for creating a
 [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree)
-for a 
-directory structure.  A **Merkle tree** is a representation of the contents 
-of the directory and its subdirectories in terms of hashes.  
+for a
+directory structure.  A **Merkle tree** is a representation of the contents
+of the directory and its subdirectories in terms of hashes.
 
-A file is represented by the hash of its 
+A file is represented by the hash of its
 contents.  A directory is represented by the hash of the hashes
 of its members, sorted.  This makes it very easy to verify the
 contents of a directory:
@@ -17,15 +17,15 @@ contents of a directory:
 	gMerkleize -x -i  .
 
 outputs a single hash, a hexadecimal number.  If any file in the
-directory structure has been changed, the output from the above 
+directory structure has been changed, the output from the above
 command will also change.
 
 ## SHA, the Secure Hash Algorithm
 
-This package uses hash algorithms specified in the 
+This package uses hash algorithms specified in the
 [Secure Hash Standard](http://nvfpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf)
-for hashing.  This is a standard published by the US National Institute of 
-Standards and Techology (**NIST**).  
+for hashing.  This is a standard published by the US National Institute of
+Standards and Techology (**NIST**).
 
 SHA is a cryptographically secure hash, meaning that for all
 practical purposes it is impossible to find two documents with the same hash.
@@ -35,13 +35,13 @@ practical way to find out what document it corresponds to is to hash all
 candidate matches and compare the resultant hash with the one you are searching
 for.
 
-**merkletree** currently uses 
+**merkletree** currently uses
 
 * either the older 160 bit/20 byte **SHA1** (aka SHA-1)
-* or the more recent and supposedly more secure **SHA2** (aka SHA-256), 
+* or the more recent and supposedly more secure **SHA2** (aka SHA-256),
   a 256 bit/32 byte hash
-* or **SHA3**, the 256-bit/32-byte version of 
-  [Keccak](https://en.wikipedia.org/wiki/SHA-3), the winner of the 2012 
+* or **SHA3**, the 256-bit/32-byte version of
+  [Keccak](https://en.wikipedia.org/wiki/SHA-3), the winner of the 2012
   NIST competition in search of a more secure version of SHA
 
 ## What It's Used For
@@ -76,17 +76,17 @@ to confirm the syntax for your release.
 
 ## Relationships
 
-Merkletree was implemented as part of the 
-[XLattice](http://www.xlattice.org) 
-project.  A Python implementation is available; see 
+Merkletree was implemented as part of the
+[XLattice](http://www.xlattice.org)
+project.  A Python implementation is available; see
 [merkletree](https://gibhub.com/jddixon/merkletree).
 
 ## Project Status
 
 The library code is well-tested and reliable.  The command line is being
-brought into conformance with the Java and Python versions and may change 
+brought into conformance with the Java and Python versions and may change
 shortly.
 
 ## On-line Documentation
-More information on the **merkletree** project can be found 
+More information on the **merkletree** project can be found
 [here](https://jddixon.github.io/merkletree)
