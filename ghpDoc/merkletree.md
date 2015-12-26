@@ -23,7 +23,7 @@ command will also change.
 ## SHA, the Secure Hash Algorithm
 
 This package uses hash algorithms specified in the
-[Secure Hash Standard](http://nvfpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf)
+[Secure Hash Standard](http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf)
 for hashing.  This is a standard published by the US National Institute of
 Standards and Techology (**NIST**).
 
@@ -79,7 +79,7 @@ to confirm the syntax for your release.
 Merkletree was implemented as part of the
 [XLattice](http://www.xlattice.org)
 project.  A Python implementation is available; see
-[merkletree](https://gibhub.com/jddixon/merkletree).
+[merkletree](https://github.com/jddixon/merkletree).
 
 ## Project Status
 

@@ -1,7 +1,7 @@
 # xlUtil_go
 
 Utilities useful or necessary for the
-[xlattice_go](https://jddixon.github.iio/xlattice_go)
+[xlattice_go](https://jddixon.github.io/xlattice_go)
 project.  These currently include
 
 * **BitMap64**, functions for creating and manipulating 64-bit bit maps
@@ -187,4 +187,4 @@ Except as noted above, the code in this project is stable and well-tested.
 ## On-line Documentation
 
 More information on the **xlUtil_go** project can be found
-[here](://jddixon.github.io/xlUtil_go)
+[here](https://jddixon.github.io/xlUtil_go)

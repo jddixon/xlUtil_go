@@ -1,7 +1,7 @@
 <h1 class="libTop">xlUtil_go</h1>
 
 Utilities useful or necessary for the
-[xlattice_go](https://jddixon.github.iio/xlattice_go)
+[xlattice_go](https://jddixon.github.io/xlattice_go)
 project.  These currently include
 
 * **BitMap64**, functions for creating and manipulating 64-bit bit maps
