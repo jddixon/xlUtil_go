@@ -1,5 +1,18 @@
 xl_util/TODO
 
+2016-01-18
+    * BUG IN COUNTEM: gMerkleize.go is not counted because its 
+        directory name is filtered
+
+2016-01-17
+    * code.google.com is deprecated but cannot determine where 
+        intmath/intgr has migrated to, so popCount_test.go continues
+        to use it; find out where it has gone to
+        - or just copy the code here with an attribution and licensing
+            info
+    * countem doesn't count gMerkleize because that name is excluded 
+        and the source code is in a directory of that name
+
 2015-10-08
     * verify that the command line documented is that actually used
         by gMerkleize

@@ -3,13 +3,13 @@ package merkletree
 // xlattice_go/util/merkletree/merkletree.go
 
 import (
-	"code.google.com/p/go.crypto/sha3"
 	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	xu "github.com/jddixon/xlUtil_go"
 	xf "github.com/jddixon/xlUtil_go/lfs"
+	"golang.org/x/crypto/sha3"
 	"hash"
 	"io/ioutil"
 	"os"
@@ -302,7 +302,7 @@ func CreateMerkleTreeFromFileSystem(pathToDir string, whichSHA int,
 		case xu.USING_SHA2:
 			shaX = sha256.New()
 		case xu.USING_SHA3:
-			shaX = sha3.NewKeccak256()
+			shaX = sha3.New256()
 			// XXX DEFAULT = ERROR
 		}
 		shaXCount := 0

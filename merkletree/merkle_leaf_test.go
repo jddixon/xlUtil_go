@@ -2,12 +2,12 @@ package merkletree
 
 import (
 	"bytes"
-	"code.google.com/p/go.crypto/sha3"
 	"crypto/sha1"
 	"crypto/sha256"
 	"fmt"
 	xr "github.com/jddixon/rnglib_go"
 	xu "github.com/jddixon/xlUtil_go"
+	"golang.org/x/crypto/sha3"
 	. "gopkg.in/check.v1"
 	"io/ioutil"
 	"strings"
@@ -59,7 +59,7 @@ func (s *XLSuite) doTestSHA(c *C, rng *xr.PRNG, whichSHA int) {
 		hash = sha.Sum(nil)
 		fHash, err = SHA2File(pathToFile)
 	case xu.USING_SHA3:
-		sha := sha3.NewKeccak256()
+		sha := sha3.New256()
 		sha.Write(data)
 		hash = sha.Sum(nil)
 		fHash, err = SHA3File(pathToFile)

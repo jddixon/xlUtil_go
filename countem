@@ -1,0 +1,5 @@
+cd ~/dev/go/src/github.com/jddixon/xlUtil_go
+rm -rf merkletree/tmp/*
+rm -rf cmd/gMerkleize/tmp/*
+pySloc -v -X '^gMerkleize$' $@      \
+    bash:countem
