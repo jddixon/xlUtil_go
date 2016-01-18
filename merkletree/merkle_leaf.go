@@ -3,13 +3,13 @@ package merkletree
 // xlattice_go/util/merkletree/merkletree.go
 
 import (
-	"code.google.com/p/go.crypto/sha3"
 	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	xu "github.com/jddixon/xlUtil_go"
 	xf "github.com/jddixon/xlUtil_go/lfs"
+	"golang.org/x/crypto/sha3"
 	"io/ioutil"
 )
 
@@ -156,7 +156,7 @@ func SHA3File(pathToFile string) (hash []byte, err error) {
 	if err == nil {
 		data, err = ioutil.ReadFile(pathToFile)
 		if err == nil {
-			digest := sha3.NewKeccak256()
+			digest := sha3.New256()
 			digest.Write(data)
 			hash = digest.Sum(nil)
 		}

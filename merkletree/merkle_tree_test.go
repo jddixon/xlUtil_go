@@ -4,7 +4,6 @@ package merkletree
 
 import (
 	"bytes"
-	"code.google.com/p/go.crypto/sha3"
 	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/hex"
@@ -12,6 +11,7 @@ import (
 	xr "github.com/jddixon/rnglib_go"
 	xu "github.com/jddixon/xlUtil_go"
 	xf "github.com/jddixon/xlUtil_go/lfs"
+	"golang.org/x/crypto/sha3"
 	. "gopkg.in/check.v1"
 	"hash"
 	"io/ioutil"
@@ -93,7 +93,7 @@ func (s *XLSuite) verifyLeafSHA(c *C, rng *xr.PRNG,
 	case xu.USING_SHA2:
 		sha = sha256.New()
 	case xu.USING_SHA3:
-		sha = sha3.NewKeccak256()
+		sha = sha3.New256()
 		// XXX DEFAULT = ERROR
 	}
 	sha.Write(data)
@@ -117,7 +117,7 @@ func (s *XLSuite) verifyTreeSHA(c *C, rng *xr.PRNG,
 		case xu.USING_SHA2:
 			sha = sha256.New()
 		case xu.USING_SHA3:
-			sha = sha3.NewKeccak256()
+			sha = sha3.New256()
 			// XXX DEFAULT = ERROR
 		}
 		for i := 0; i < len(node.nodes); i++ {

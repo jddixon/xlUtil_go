@@ -4,13 +4,13 @@ package merkletree
 
 import (
 	"bytes"
-	"code.google.com/p/go.crypto/sha3"
 	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	xr "github.com/jddixon/rnglib_go"
 	xu "github.com/jddixon/xlUtil_go"
+	"golang.org/x/crypto/sha3"
 	. "gopkg.in/check.v1"
 	"hash"
 	re "regexp"
@@ -216,7 +216,7 @@ func (s *XLSuite) doTestMerkleDoc(c *C, rng *xr.PRNG, whichSHA int) {
 	case xu.USING_SHA2:
 		sha = sha256.New()
 	case xu.USING_SHA3:
-		sha = sha3.NewKeccak256()
+		sha = sha3.New256()
 		// XXX DEFAULT = ERROR
 	}
 	// Python uses this order
