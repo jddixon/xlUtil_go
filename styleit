@@ -4,9 +4,8 @@ if [ ! -z "${DEV_BASE// }" ]
 then
   cd $DEV_BASE/go/src/github.com/jddixon/xlUtil_go
   
-  rm -rf merletree/tmp/* 
+  gofmt -w .
   
-  pySloc -L go  -X *.pb.go -v $@
 else
   echo "DEV_BASE is not defined"
 fi

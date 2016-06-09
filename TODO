@@ -1,5 +1,26 @@
 xl_util/TODO
 
+2016-06-22
+    * makeExRE(wildcards) => compiled regular expression
+        from slice of globs
+        - xlUtil_go/merkletree must use
+        - xlUtil_go/nlhtree must use
+    * interoperability Go merkletree with Python merkletree
+    * interoperability Go nlhtree with Python nlhtree
+    * move SHA{1,2}_NONE from merkletree to nlhtree
+        - xlUtil_go/const.go would be better but would cause
+            circular references
+
+2016-03-04
+    * re popCount.go look at using github.com/hideo55/go-popcount 
+        - is it correct?
+        - need to test both his go implementation and his assembly
+            language code
+        - need to be able to detect processor type and use assembly
+            code if amd64
+        - test on laptop (64 bit Intel CPU), our local network, 
+            and EC2 machines
+
 2016-01-18
     * BUG IN COUNTEM: gMerkleize.go is not counted because its 
         directory name is filtered
