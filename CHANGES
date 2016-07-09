@@ -1,5 +1,8 @@
 xlUtil_go/CHANGES
 
+v0.9.15
+    2016-07-09
+        * add ghpDoc/{css,img}                                      SLOC 4251
 v0.9.14
     2016-06-09
         * add .dvcz, bkp2U, other bash scripts                      SLOC 3731
@@ -77,6 +80,7 @@ v0.5.1
 v0.5.0
     2014-05-10
         * split from xlattice_go                                    SLOC 1926
+
 
 
 
