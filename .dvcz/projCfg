@@ -2,8 +2,8 @@
 project:xlUtil_go
 package:xlUtil_go
 mainlang:go
-version:0.9.14
-versionDate:2016-06-09
+version:0.9.15
+versionDate:2016-07-09
 :?dirs?:
 dir:std:ghpDoc
 dir:std:.dvcz
@@ -25,9 +25,8 @@ code:std:.dvczignore.local
 code:std:.gitignore
 code:std:.gitignore.local
 code:std:/var/app/sharedev/config/projCfg
-txt:std:.copyright
+txt:std:LICENSE-MIT.md
 txt:std:CHANGES
-txt:std:LICENSE.md
 txt:std:README.md
 txt:std:TODO
 bash:std:bkp2U

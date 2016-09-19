@@ -6,7 +6,7 @@ then
   
   rm -rf merletree/tmp/* 
   
-  pySloc -L go  -X *.pb.go -v $@
+  pySloc -L go cmd/gMerkleize/gMerkleize.go  -X *.pb.go -v $@
 else
   echo "DEV_BASE is not defined"
 fi
