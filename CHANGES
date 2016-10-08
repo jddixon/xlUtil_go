@@ -1,5 +1,8 @@
 xlUtil_go/CHANGES
 
+v0.9.17
+    2016-10-07
+        * update and improve docs                                   SLOC 4288
 v0.9.16
     2016-09-18
         * add missing license                                       SLOC 4284
@@ -83,6 +86,7 @@ v0.5.1
 v0.5.0
     2014-05-10
         * split from xlattice_go                                    SLOC 1926
+
 
 
 
