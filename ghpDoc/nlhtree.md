@@ -30,7 +30,7 @@ with a digit.
 The topmost node in the tree is a pair of the first type and belongs to the
 **NLHTree** class.  It consists of a name and a list of **NLHNodes**, where an
 NLHNode is either an NLHTree or an **NLFLeaf**.  At each level the list of
-child nodes is sorted by name and is indented one space more than the 
+child nodes is sorted by name and is indented one space more than the
 parent.
 
 ## Intermediate Nodes

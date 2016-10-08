@@ -7,18 +7,18 @@ Giaje1YAJPNVBt3dlOA5lhBp4GpSYBskJ9UR2Zyt3lgAGK3dEwxYETLMh9VWEV8i
 k2lyCIE/V/CDb9eVDYQgYSJYrnQ/JAPST7NbcY8aI+/0l7QVBhLBpmOCvmS6ofvz
 /QIDAQAB
 -----END RSA PUBLIC KEY-----
-xlUtil_go v0.9.17
-2016-10-08 01:25:01
+xlUtil_go v0.9.18
+2016-10-08 18:56:35
 # BEGIN CONTENT #
 xlUtil_go
  .dvcz
-  builds bbe1a471c4f4b9b40c0ed496a1a941474de57c74
+  builds 6e6a7a00b632a09f8bb225a71acdb353d40411ab
   copyright 803f3e50518123ef8a08d34f2238e89b62d0c9a2
-  lastBuildList 3133ee1414f866ffecb2a1a51789efdcaad716f5
+  lastBuildList 763c8839bec171c215882df5cefd132be4413ba7
   license 5977a55c75bb4612004451a56b0b4c22d9d3311d
   projCfg 99a46e6408bb17a1e20c0a8b21df8a8e75f9f41b
   projCfg.local 07c26990fdd322dfe8449544b454b219fbb0e847
-  version 9915b55990b91fbfa69bce5a8463f41f92909873
+  version a30508dac2b9e21117119c53769dbf1cb1741367
  .git
   FETCH_HEAD 6971a18c98ce79ce473b9873ee622fbea30e2d08
   HEAD acbaef275e46a7f14c1ef456fff2c8bbe8c84724
@@ -62,7 +62,7 @@ xlUtil_go
    tags
  .gitignore 95eef11d7d9571b19f33fda8b8e45de6b82a5781
  .gitignore.local 9ec44174e5476a08f44955804a9cb0c467b64002
- CHANGES 91b6ebb75e0346dae492cb899de3893706a246ba
+ CHANGES 06b6c08a952f3f426685c0cdacfa6679d3b8a71d
  LICENSE-MIT.md d1cecfadc47b23486f6bc8a863cfdde348c3eb46
  README.md b1993ff6ea012bcb0f90e056cd8b2da27ea201df
  TODO b9fd5109ea5a3590186abf7648fb93abc7236ff1
@@ -95,8 +95,8 @@ xlUtil_go
    xl-registration.jpg 15cbf951f9db173a45428b32dcec87aca83bbdf0
    xlattice-2014.jpg f185aaad06db71acd9454f31054c62c56d36f37f
   index.md 733901277f38caab8a034e66033044d266ae35c4
-  merkletree.md 645dacdf7351fd0f068f4393a7f99e68093a971e
-  nlhtree.md a32cebd1cb6e676d2eae52a80de536f43a768545
+  merkletree.md 98bf89184768714b3cfb442fdbcb55cbfe91b46e
+  nlhtree.md 4f110f6768fafc2bf60ccbc127872207b4c4587a
  gocheck_test.go cfe1e8221a6c48db6ec50a8ddd527bb01aed5f53
  installit e892c31faa9af17e171d06b09a1deaed645a6078
  lfs
@@ -140,7 +140,7 @@ xlUtil_go
  test.all 45b2eabfb877624e9dd7d5f8a2ad83f9220a4de4
  timestamp.go fcd62b4d08f595eb3134031bc10467d58a393aa6
  timestamp_test.go be305cf86873b5df30e742adaff8672b14473151
- version.go 76033b0cadbf8502d5dd58366dcfc7c6b2211a7c
+ version.go 3a064630c1fa87fef11fb076cdfd34c7daa33eac
 # END CONTENT #
 
-lHdnF2VW3SPLrblvOXp+VH5oxRuDeKbAmFAdG5mO7FsxVulm9IEGug+6YqfT7xYnAttqN8/fr1MnyJo7IvCySTLC4JUUapa5e1Q9b6YetOr0T8c7FvD9RTWv/EdQWgKXedK5Z5ACIpyg56RLhTIOHZLGk9PUnT0T1/9eLjyLsBcqmKWLuaV2qjWda6dJE+OJZrhD0QB24K1tpN0AhlDvcXownF2EV4BTuqgEyM2dDwCUF0NobNVJb9ZlGCM/yV+ydCVmjwK1I9uvVZV1vtv1eEbfpbvHHTSUtkHtZQftuwD12m6o6uG8C2tbjVoOOyrpWCgG0AuImbhPQ0F7TkqNJg==
+GTQKlpAp7BvDL2o5deEketz8CZKBQ6PpKD6O9k0Y+nR/5eEwrPXTeyUyJdpbeYYe+ZC+nOuidnEyLNqXJVt8O8VmtpLqbHwMPYVj49hic9u2g/YBs2bag+5mDheODgo+X9V2XeCBitxvoFRtn09qWqvhOyNj8ufOxlyeoeAHffsYxuSeoUD8gy1G7BsClwIfrcDZKyXHcQYRNxb78uATi2VXd6iXsVcEblfoaQoh3iK43nSpdXzvzps3XO/YNqrRpkN2KdtWVOAcbA4g0Wt86wBrrrHxPgTmveOdLeJOS/iwA4sWmlHTfK9K3tbAtuNe/ZNADQPz7P/z/iPuco0ukQ==
