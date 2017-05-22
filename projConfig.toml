@@ -1,0 +1,23 @@
+projConfig.toml for xlUtil_go
+
+[meta]
+    version = '0.1.0'
+
+[project]
+    name = 'xlUtil_go'  # distro name
+    package = 'xlUtil_go'  # internal name
+    main_lang = 'go'
+    version = '0.9.19'
+    version_date = '2017-05-22'
+    author = 'Jim Dixon'
+    author_email = 'jddixon@gmail.com'
+    copyright = '2014-2016'
+    description = 'utilities for the XLattice Go projects'
+    dev_status = 'alpha'
+    license = 'mit'
+    relpath = 'go/src/github.com/jddixon/xlUtil_go'
+    state = 'shared'
+    url = 'https://jddixon.github.io/xlUtil_go'
+
+[go]
+    cmds=['gMerkleize']
