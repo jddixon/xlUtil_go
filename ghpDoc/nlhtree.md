@@ -11,21 +11,27 @@ the parent
 
 All of the hashes
 in the tree have the same number of bits, either 160 (for an SHA1 hash)
-or 256 (for an SHA2 or SHA3 hash).
+or 256 (for an SHA2 or SHA3 hash).  Note that as the terms are used here
+`SHA1` is equivalent to `SHA-1`, `SHA2` is the same as `SHA-256`, and
+`SHA3` is the 256-bit version of `SHA-3`, also known as `Keccak`,
+the winner of the NIST competition for the most recent version of the
+Secure Hash Algorithm.
 
 ## Node Names
 
-All names in the tree must be valid file names.  For the moment, this
-will be understood to include letters, both upper and lower case,
-digits, the dash ('-'), and the underscore ('_').  Node names may not
-include either spaces or line breaks (CR=13 and LF=10).
+All names in the NLHTree must be valid file names.  For the moment, this
+will be understood to include letters, both upper and lower case;
+digits; the dash ('-'); and the underscore ('_').  Node names may not
+include either spaces or line breaks (CR=13 and LF=10) and may not begin
+with a digit.
 
 ## Top
 
 The topmost node in the tree is a pair of the first type and belongs to the
 **NLHTree** class.  It consists of a name and a list of **NLHNodes**, where an
 NLHNode is either an NLHTree or an **NLFLeaf**.  At each level the list of
-nodes is sorted by name.
+child nodes is sorted by name and is indented one space more than the
+parent.
 
 ## Intermediate Nodes
 
@@ -37,10 +43,11 @@ class and so consist of a name and a (possibly empty) sorted list.
 Leaf nodes in the tree, instances of the **NLHLeaf** class, consist of a valid
 name and a hash.  Once formed an NLHLeaf is immutable in the sense that
 its fields (its name and its hash) cannot be changed.  If the leaf node is
-in an NLHTree, the tree has a reference to
-it.
+in an NLHTree, the tree has a reference to it.
 
 ## Example
+
+What follows is the serialization of the NLHTree for the directory `dataDir/`.
 
 	dataDir
 	 data1 bea7383743859a81b84cec8fde2ccd1f3e2ff688

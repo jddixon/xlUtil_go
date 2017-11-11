@@ -4,7 +4,7 @@ if [ ! -z "${DEV_BASE// }" ]
 then
   cd $DEV_BASE/go/src/github.com/jddixon/xlUtil_go
   
-  rm -rf merletree/tmp/* 
+  rm -rf merkletree/tmp/* 
   
   pySloc -L go cmd/gMerkleize/gMerkleize.go  -X *.pb.go -v $@
 else

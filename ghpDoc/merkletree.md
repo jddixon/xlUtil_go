@@ -30,10 +30,11 @@ Standards and Techology (**NIST**).
 SHA is a cryptographically secure hash, meaning that for all
 practical purposes it is impossible to find two documents with the same hash.
 In other words, the SHA hashes are meant to be **one-way**: given a document,
-it is very easy to determine its SHA hash, but given such a hash the only
+it is very cheap (it requires very little computation)
+to determine its SHA hash, but given such a hash the only
 practical way to find out what document it corresponds to is to hash all
 candidate matches and compare the resultant hash with the one you are searching
-for.
+for.  Computationally this is extremely expensive or impossible.
 
 **merkletree** currently uses
 
@@ -50,21 +51,24 @@ Verifying the integrity of file systems, of directory structures.
 
 ## Command Line
 
-	usage: gMerkleize [options]
-	where the options are
-	  -h, --help           to see this very useful message
-	  -1, --usingSHA1      use SHA-1 hash instead of default SHA-256
-	  -d  --outDir DIR     write serialized merkletree here
-	  -i, --inDir DIR      where DIR names directory being scanned
-	  -j, --justShow       list options and exit
-	  -m  --showTree       output the merkletree hash/filename pairs
-	  -o, --outFile NAME   write output to this file name
-	  -P, --match PAT      include ONLY files with matching names
-	  -t, --showTimestamp  output UTC timestamp to command line
-	  -v, --verbose        verbose: whether the program is chatty
-	  -V, --version        show version information
-	  -x, --hashOutput     whether to output the top level hash
-	  -X, --exclude PAT    don't include files with matching names
+    Usage: gMerkleize [OPTIONS]
+    where the options are:
+      -1	use SHA1 hash in building tree
+      -P value
+        	list of patterns, file name patterns to be matched
+      -T	test run
+      -V	output package version info
+      -X value
+        	list of patterns, file names patterns to be excluded
+      -i string
+        	path to directory being scanned
+      -j	display option settings and exit
+      -m	output the merkletree
+      -o string
+        	write serialzed merkletree here
+      -t	output UTC timestamp
+      -v	be talkative
+      -x	output top level hash
 	
 The default output file name is the UTC timestamp.
 
@@ -79,7 +83,7 @@ to confirm the syntax for your release.
 Merkletree was implemented as part of the
 [XLattice](http://www.xlattice.org)
 project.  A Python implementation is available; see
-[merkletree](https://github.com/jddixon/merkletree).
+[merkletree](https://jddixon.github.io/xlUtil_go/merkletree).
 
 ## Project Status
 
